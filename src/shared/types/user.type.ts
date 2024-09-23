@@ -5,5 +5,5 @@ export type User = {
   avatarUrl: Image;
   isPro: boolean;
   email: string;
-  password: string;
+  token: string;
 }

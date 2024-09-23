@@ -1,0 +1,78 @@
+{
+  "api": {
+    "titles": [
+      "Sunny City Apartment",
+      "Luxury Penthouse Suite",
+      "Cozy Beach Cottage",
+      "Spacious Family Home",
+      "Modern Urban Loft",
+      "Private Garden Villa",
+      "Comfortable Shared Room",
+      "Boutique Hotel Suite"
+    ],
+    "descriptions": [
+      "A cozy studio perfect for city explorers.",
+      "Top-floor penthouse with amazing city views.",
+      "Relax in this beachside cottage, minutes from the ocean.",
+      "Ideal family home in a peaceful neighborhood.",
+      "Modern apartment with easy access to metro stations.",
+      "Private house with a garden and swimming pool.",
+      "Comfortable room in a shared apartment near downtown.",
+      "Luxurious hotel suite with complimentary breakfast."
+    ],
+    "cities": [
+      "Paris",
+      "Cologne",
+      "Brussels",
+      "Amsterdam",
+      "Hamburg",
+      "Dusseldorf"
+    ],
+    "previewImages": [
+      "apartment.jpg",
+      "house.jpg",
+      "hotel.jpg",
+      "room.jpg"
+    ],
+    "images": [
+      "image-1.jpg",
+      "image-2.jpg",
+      "image-3.jpg",
+      "image-4.jpg",
+      "image-5.jpg",
+      "image-6.jpg"
+    ],
+    "offerTypes": [
+      "apartment", "house", "room", "hotel"
+    ],
+    "goods": ["Breakfast", "Air conditioning", "Laptop friendly workspace", "Baby seat", "Washer", "Towels", "Fridge"],
+    "coordinates": [
+      "48.85661,2.351499",
+      "50.938361,6.959974",
+      "50.846557,4.351697",
+      "52.370216,4.895168",
+      "53.550341,10.000654",
+      "51.225402,6.776314"
+    ],
+    "users": [
+      "max",
+      "alice",
+      "bob"
+    ],
+    "emails": [
+      "email-1@mail.com",
+      "email-111@mail.com",
+      "email-111111@mail.com"
+    ],
+    "avatars": [
+      "user-1.jpg",
+      "user-2.jpg",
+      "user-3.jpg"
+    ],
+    "tokens": [
+      "tokens-1",
+      "tokens-2",
+      "tokens-3"
+    ]
+  }
+}
