@@ -1,8 +1,8 @@
 import { Command } from './command.interface.js';
-import { TSVFileReader } from '../../shared/libs/file-reader/index.js';
+import { TSVFileReader } from '#libs/file-reader/index.js';
 import chalk from 'chalk';
-import { Offer } from '../../shared/types/offer.type.js';
-import { getErrorMessage } from '../../shared/helpers/common.js';
+import { Offer } from '#types/offer.type.js';
+import { getErrorMessage } from '#shared/helpers/common.js';
 
 export class ImportCommand implements Command {
   private onImportedOffer(offer: Offer): void {
