@@ -3,22 +3,48 @@ import { TSVFileReader } from '#libs/file-reader/index.js';
 import chalk from 'chalk';
 import { Offer } from '#types/offer.type.js';
 import { getErrorMessage } from '#shared/helpers/common.js';
+import { ConsoleLogger, Logger } from '#shared/libs/logger/index.js';
+import { DatabaseClient } from '#shared/libs/database-client/index.js';
+import { getMongoURI } from '#shared/helpers/database.js';
+import { DEFAULT_DB_PORT } from './command.constant.js';
 
 export class ImportCommand implements Command {
-  private onImportedOffer(offer: Offer): void {
-    console.info(offer);
-  }
+  private databaseClient: DatabaseClient;
+  private logger: Logger;
+  private salt: string;
 
-  private onCompleteImport(count: number) {
-    console.info(chalk.yellowBright(`${count} rows imported.`));
+  constructor() {
+    this.onImportedOffer = this.onImportedOffer.bind(this);
+    this.onCompleteImport = this.onCompleteImport.bind(this);
+
+    this.logger = new ConsoleLogger();
+    this.logger.debug('constructor', this.salt);
   }
 
   public getName(): string {
     return '--import';
   }
 
-  public async execute(...parameters: string[]): Promise<void> {
-    const [filename] = parameters;
+  private async onImportedOffer(offer: Offer, resolve: () => void) {
+    await this.saveOffer(offer);
+    resolve();
+  }
+
+  private async saveOffer(offer: Offer) {
+    this.logger.debug(JSON.stringify(offer));
+  }
+
+  private onCompleteImport(count: number) {
+    console.info(chalk.yellowBright(`${count} rows imported.`));
+    this.databaseClient.disconnect();
+  }
+
+  public async execute(filename: string, login: string, password: string, host: string, dbname: string, salt: string): Promise<void> {
+    const uri = getMongoURI(login, password, host, DEFAULT_DB_PORT, dbname);
+    this.salt = salt;
+
+    await this.databaseClient.connect(uri);
+
     const fileReader = new TSVFileReader(filename.trim());
 
     fileReader.on('line', this.onImportedOffer);
