@@ -12,10 +12,10 @@
     "start": "npm run build && node ./dist/main.js",
     "start:dev": "npm run ts ./src/main.rest.ts | pino-pretty --colorize --translateTime SYS:standard",
     "build": "npm run clean && npm run compile",
-    "lint": "eslint src/ --ext .ts",
+    "lint": "tsc --noEmit && eslint src/ --ext .ts",
     "compile": "tsc -p tsconfig.json",
     "clean": "rimraf dist",
-    "ts": "tsc --noEmit && node --no-warnings==ExperimentalWarning --loader ts-node/esm",
+    "ts": "node --no-warnings=ExperimentalWarning --loader ts-node/esm",
     "mock:server": "json-server ./mocks/mock-server-data.json --port 3123 --host localhost"
   },
   "devDependencies": {
@@ -49,10 +49,5 @@
     "mongoose": "8.6.3",
     "pino": "9.4.0",
     "reflect-metadata": "0.2.2"
-  },
-  "imports": {
-    "#types/": "./src/shared/types/",
-    "#shared/*": "./src/shared/*",
-    "#libs/*": "./src/shared/libs/*"
   }
 }

@@ -1,7 +1,7 @@
 import { OfferGenerator } from './offer-generator.interface.js';
-import { getRandomBoolean, getRandomDate, getRandomInRange, getRandomItem, getRandomItems } from '#shared/helpers/common.js' ;
+import { getRandomBoolean, getRandomDate, getRandomInRange, getRandomItem, getRandomItems } from '@shared/helpers/common.js' ;
 import { PriceLimit, RatingLimit, RoomLimit, AdultLimit } from './const.js';
-import { OfferType, MockServerData } from '#types/index.js';
+import { OfferType, MockServerData, CityName, UserType } from '@shared/types/index.js';
 
 export class TSVOfferGenerator implements OfferGenerator {
   constructor(private readonly mockData: MockServerData) {}
@@ -22,10 +22,10 @@ export class TSVOfferGenerator implements OfferGenerator {
     const goods = getRandomItems<string>(this.mockData.goods).join(',');
     const userName = getRandomItem(this.mockData.users);
     const avatarUrl = getRandomItem<string>(this.mockData.avatars);
-    const isPro = getRandomBoolean();
+    const userType = getRandomItem<string>(Object.keys(UserType));
     const email = getRandomItem<string>(this.mockData.emails);
     const token = getRandomItem<string>(this.mockData.tokens);
-    const city = getRandomItem<string>(this.mockData.cities);
+    const city = getRandomItem<string>(Object.keys(CityName));
     const cityLocation = getRandomItem<string>(this.mockData.coordinates);
     const location = getRandomItem<string>(this.mockData.coordinates);
 
@@ -47,7 +47,7 @@ export class TSVOfferGenerator implements OfferGenerator {
       goods,
       userName,
       avatarUrl,
-      isPro,
+      userType,
       email,
       token,
       location

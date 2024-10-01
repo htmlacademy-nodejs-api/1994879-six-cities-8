@@ -1,9 +1,9 @@
 import { inject, injectable } from 'inversify';
-import { Logger } from '#libs/logger/index.js';
-import { Config, RestSchema } from '#libs/config/index.js';
-import { Component } from '#types/index.js';
-import { DatabaseClient } from '#libs/database-client/index.js';
-import { getMongoURI } from '#shared/helpers/database.js';
+import { Logger } from '@libs/logger/index.js';
+import { Config, RestSchema } from '@libs/config/index.js';
+import { Component } from '@shared/types/index.js';
+import { DatabaseClient } from '@libs/database-client/index.js';
+import { getMongoURI } from '@shared/helpers/database.js';
 
 @injectable()
 export class RestApplication {
@@ -25,13 +25,20 @@ export class RestApplication {
     return this.databaseClient.connect(mongoUri);
   }
 
-
   public async init() {
     this.logger.info('Application initialization');
     this.logger.info(`Get value from env $PORT: ${this.config.get('PORT')}`);
 
-    this.logger.info('Init database…');
+    this.logger.info('Init database...');
     await this.initDb();
     this.logger.info('Init database completed');
+
+    // const user = await UserModel.create({
+    //   email: 'test@email.local',
+    //   avatarPath: 'keks.jpg',
+    //   firstname: 'Keks',
+    //   lastname: 'Unknown'
+    // });
+    // console.log(user);
   }
 }

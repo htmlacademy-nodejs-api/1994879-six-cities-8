@@ -1,11 +1,11 @@
 import { Command } from './command.interface.js';
-import { TSVFileReader } from '#libs/file-reader/index.js';
+import { TSVFileReader } from '@libs/file-reader/index.js';
 import chalk from 'chalk';
-import { Offer } from '#types/offer.type.js';
-import { getErrorMessage } from '#shared/helpers/common.js';
-import { ConsoleLogger, Logger } from '#shared/libs/logger/index.js';
-import { DatabaseClient } from '#shared/libs/database-client/index.js';
-import { getMongoURI } from '#shared/helpers/database.js';
+import { Offer } from '@shared/types/index.js';
+import { getErrorMessage } from '@shared/helpers/common.js';
+import { ConsoleLogger, Logger } from '@shared/libs/logger/index.js';
+import { DatabaseClient } from '@shared/libs/database-client/index.js';
+import { getMongoURI } from '@shared/helpers/database.js';
 import { DEFAULT_DB_PORT } from './command.constant.js';
 
 export class ImportCommand implements Command {
@@ -52,6 +52,7 @@ export class ImportCommand implements Command {
 
     try {
       fileReader.read();
+      await this.databaseClient.disconnect();
     } catch (error) {
       console.error(chalk.bgRed(`Can't import data from file: ${filename}`));
       console.error(`Details: ${chalk.redBright(getErrorMessage(error))}`);

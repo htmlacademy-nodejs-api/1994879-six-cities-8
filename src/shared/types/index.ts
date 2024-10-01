@@ -1,7 +1,10 @@
 export { Location } from './location.type.js';
 export { City } from './city.type.js';
+export { CityName } from './city-name.enum.js';
 export { User } from './user.type.js';
+export { UserType } from './user.type.enum.js';
 export { Offer } from './offer.type.js';
+export { Comment } from './comment.type.js';
 export { Image } from './image.type.js';
 export { OfferType } from './offer.type.enum.js';
 export { Goods } from './goods.type.enum.js';

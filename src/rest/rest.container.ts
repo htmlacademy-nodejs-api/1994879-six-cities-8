@@ -1,9 +1,9 @@
 import { Container } from 'inversify';
 import { RestApplication } from './rest.application.js';
-import { Component } from '#types/index.js';
-import { Logger, PinoLogger } from '#libs/logger/index.js';
-import { Config, RestConfig, RestSchema } from '#libs/config/index.js';
-import { DatabaseClient, MongoDatabaseClient } from '#libs/database-client/index.js';
+import { Component } from '@shared/types/index.js';
+import { Logger, PinoLogger } from '@libs/logger/index.js';
+import { Config, RestConfig, RestSchema } from '@libs/config/index.js';
+import { DatabaseClient, MongoDatabaseClient } from '@libs/database-client/index.js';
 
 export function createRestApplicationContainer() {
   const restApplicationContainer = new Container();
