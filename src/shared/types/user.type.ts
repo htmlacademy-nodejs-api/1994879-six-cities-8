@@ -1,9 +1,9 @@
 import { Image } from './image.type.js';
+import { UserType } from './user.type.enum.js';
 
 export type User = {
   name: string;
   avatarUrl: Image;
-  isPro: boolean;
+  type: UserType;
   email: string;
-  token: string;
 }

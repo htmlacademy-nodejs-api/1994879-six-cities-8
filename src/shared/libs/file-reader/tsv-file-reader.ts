@@ -1,7 +1,7 @@
 import EventEmitter from 'node:events';
 import { createReadStream } from 'node:fs';
 import { FileReader } from './file-reader.interface.js';
-import { Offer, OfferType, Image, Location, Goods } from '#types/index.js';
+import { Offer, OfferType, Image, Location, Goods, CityName, UserType } from '#types/index.js';
 
 export class TSVFileReader extends EventEmitter implements FileReader {
   private CHUNK_SIZE = 16384;
@@ -24,16 +24,15 @@ export class TSVFileReader extends EventEmitter implements FileReader {
       isPremium,
       isFavorite,
       rating,
-      type,
+      offerType,
       bedrooms,
       maxAdults,
       price,
       goods,
       userName,
       avatarUrl,
-      isPro,
+      userType,
       email,
-      token,
       location
     ] = line.split('\t');
 
@@ -41,18 +40,18 @@ export class TSVFileReader extends EventEmitter implements FileReader {
       title,
       description,
       postDate: new Date(date),
-      city: { name: cityName, location: this.parseLocation(cityLocation)},
+      city: { name: cityName as CityName, location: this.parseLocation(cityLocation)},
       previewImage,
       images: this.parseImages(images),
       isPremium: this.parseBoolean(isPremium),
       isFavorite: this.parseBoolean(isFavorite),
       rating: Number(rating),
-      type: OfferType[type as OfferType],
+      type: OfferType[offerType as OfferType],
       bedrooms: Number(bedrooms),
       maxAdults: Number(maxAdults),
       price: this.parsePrice(price),
       goods: this.parseGoods(goods),
-      host: { name: userName, avatarUrl, isPro: this.parseBoolean(isPro), email, token },
+      host: { name: userName, avatarUrl, type: userType as UserType, email },
       location: this.parseLocation(location),
     };
   }
@@ -104,7 +103,7 @@ export class TSVFileReader extends EventEmitter implements FileReader {
         importedRowCount++;
 
         const parsedOffer = this.parseLineToOffer(completeRow);
-        this.emit('line', parsedOffer);
+        await new Promise((resolve) => this.emit('line', parsedOffer, resolve));
       }
     }
 
