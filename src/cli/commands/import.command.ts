@@ -4,11 +4,15 @@ import chalk from 'chalk';
 import { Offer } from '#types/index.js';
 import { getErrorMessage } from '#shared/helpers/common.js';
 import { ConsoleLogger, Logger } from '#libs/logger/index.js';
-import { DatabaseClient } from '#libs/database-client/index.js';
+import { DatabaseClient, MongoDatabaseClient } from '#libs/database-client/index.js';
 import { getMongoURI } from '#shared/helpers/database.js';
-import { DEFAULT_DB_PORT } from './command.constant.js';
+import { DEFAULT_DB_PORT, DEFAULT_USER_PASSWORD } from './command.constant.js';
+import { DefaultUserService, UserModel, UserService } from '#shared/modules/user/index.js';
+import { DefaultOfferService, OfferModel, OfferService } from '#shared/modules/offer/index.js';
 
 export class ImportCommand implements Command {
+  private userService: UserService;
+  private offerService: OfferService;
   private databaseClient: DatabaseClient;
   private logger: Logger;
   private salt: string;
@@ -18,6 +22,9 @@ export class ImportCommand implements Command {
     this.onCompleteImport = this.onCompleteImport.bind(this);
 
     this.logger = new ConsoleLogger();
+    this.userService = new DefaultUserService(this.logger, UserModel);
+    this.offerService = new DefaultOfferService(this.logger, OfferModel);
+    this.databaseClient = new MongoDatabaseClient(this.logger);
   }
 
   public getName(): string {
@@ -30,7 +37,29 @@ export class ImportCommand implements Command {
   }
 
   private async saveOffer(offer: Offer) {
-    this.logger.debug(JSON.stringify(offer));
+    const user = await this.userService.findOrCreate({
+      ...offer.host,
+      password: DEFAULT_USER_PASSWORD
+    }, this.salt);
+
+    await this.offerService.create({
+      title: offer.title,
+      description: offer.description,
+      postDate: offer.postDate,
+      cityName: offer.city.name,
+      previewImage: offer.previewImage,
+      images: offer.images,
+      isPremium: offer.isPremium,
+      isFavorite: offer.isFavorite,
+      rating: offer.rating,
+      type: offer.type,
+      bedrooms: offer.bedrooms,
+      maxAdults: offer.maxAdults,
+      price: offer.price,
+      goods: offer.goods,
+      userId: user.id,
+      location: offer.location
+    });
   }
 
   private onCompleteImport(count: number) {
@@ -41,7 +70,6 @@ export class ImportCommand implements Command {
   public async execute(filename: string, login: string, password: string, host: string, dbname: string, salt: string): Promise<void> {
     const uri = getMongoURI(login, password, host, DEFAULT_DB_PORT, dbname);
     this.salt = salt;
-    this.logger.debug(this.salt);
 
     await this.databaseClient.connect(uri);
 
@@ -52,7 +80,6 @@ export class ImportCommand implements Command {
 
     try {
       fileReader.read();
-      await this.databaseClient.disconnect();
     } catch (error) {
       console.error(chalk.bgRed(`Can't import data from file: ${filename}`));
       console.error(`Details: ${chalk.redBright(getErrorMessage(error))}`);
