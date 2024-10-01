@@ -1,11 +1,11 @@
 import { Command } from './command.interface.js';
-import { TSVFileReader } from '@libs/file-reader/index.js';
+import { TSVFileReader } from '#libs/file-reader/index.js';
 import chalk from 'chalk';
-import { Offer } from '@shared/types/index.js';
-import { getErrorMessage } from '@shared/helpers/common.js';
-import { ConsoleLogger, Logger } from '@shared/libs/logger/index.js';
-import { DatabaseClient } from '@shared/libs/database-client/index.js';
-import { getMongoURI } from '@shared/helpers/database.js';
+import { Offer } from '#types/index.js';
+import { getErrorMessage } from '#shared/helpers/common.js';
+import { ConsoleLogger, Logger } from '#libs/logger/index.js';
+import { DatabaseClient } from '#libs/database-client/index.js';
+import { getMongoURI } from '#shared/helpers/database.js';
 import { DEFAULT_DB_PORT } from './command.constant.js';
 
 export class ImportCommand implements Command {
@@ -18,7 +18,6 @@ export class ImportCommand implements Command {
     this.onCompleteImport = this.onCompleteImport.bind(this);
 
     this.logger = new ConsoleLogger();
-    this.logger.debug('constructor', this.salt);
   }
 
   public getName(): string {
@@ -42,6 +41,7 @@ export class ImportCommand implements Command {
   public async execute(filename: string, login: string, password: string, host: string, dbname: string, salt: string): Promise<void> {
     const uri = getMongoURI(login, password, host, DEFAULT_DB_PORT, dbname);
     this.salt = salt;
+    this.logger.debug(this.salt);
 
     await this.databaseClient.connect(uri);
 

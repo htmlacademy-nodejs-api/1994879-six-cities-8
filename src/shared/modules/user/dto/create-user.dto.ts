@@ -1,4 +1,4 @@
-import { UserType } from '@shared/types/index.js';
+import { UserType } from '#types/index.js';
 
 export class CreateUserDto {
   name: string;

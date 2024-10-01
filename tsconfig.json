@@ -21,13 +21,7 @@
     "sourceMap": true,
     "outDir": "./dist",
     "rootDir": ".",
-    "baseUrl": "./src",
     "emitDecoratorMetadata": true,
-    "paths": {
-      "@shared/*": ["shared/*"],
-      "@helpers/*": ["shared/helpers/*"],
-      "@libs/*": ["shared/libs/*"]
-    },
     "types": [
       "node",
     ],

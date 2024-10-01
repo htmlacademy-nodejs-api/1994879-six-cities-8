@@ -1,9 +1,9 @@
 import { inject, injectable } from 'inversify';
-import { Logger } from '@libs/logger/index.js';
-import { Config, RestSchema } from '@libs/config/index.js';
-import { Component } from '@shared/types/index.js';
-import { DatabaseClient } from '@libs/database-client/index.js';
-import { getMongoURI } from '@shared/helpers/database.js';
+import { Logger } from '#libs/logger/index.js';
+import { Config, RestSchema } from '#libs/config/index.js';
+import { Component } from '#types/index.js';
+import { DatabaseClient } from '#libs/database-client/index.js';
+import { getMongoURI } from '#shared/helpers/database.js';
 
 @injectable()
 export class RestApplication {

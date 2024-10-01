@@ -1,8 +1,8 @@
 import { defaultClasses, getModelForClass, prop, modelOptions } from '@typegoose/typegoose';
 
-import { Image, User, UserType } from '@shared/types/index.js';
-import { hashPassword } from '@shared/helpers/hash.js';
-import { verifyPassword } from '@shared/helpers/hash.js';
+import { Image, User, UserType } from '#types/index.js';
+import { hashPassword } from '#shared/helpers/hash.js';
+import { verifyPassword } from '#shared/helpers/hash.js';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export interface UserEntity extends defaultClasses.Base {}

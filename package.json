@@ -9,13 +9,13 @@
   ],
   "main": "main.js",
   "scripts": {
-    "start": "npm run build && node ./dist/main.js",
-    "start:dev": "npm run ts ./src/main.rest.ts | pino-pretty --colorize --translateTime SYS:standard",
+    "start": "npm run build && node ./dist/main.rest.js",
+    "start:dev": "nodemon",
     "build": "npm run clean && npm run compile",
-    "lint": "tsc --noEmit && eslint src/ --ext .ts",
+    "lint": "eslint src/ --ext .ts",
     "compile": "tsc -p tsconfig.json",
     "clean": "rimraf dist",
-    "ts": "node --no-warnings=ExperimentalWarning --loader ts-node/esm",
+    "ts": "tsc --noEmit && node --no-warnings=ExperimentalWarning --loader ts-node/esm",
     "mock:server": "json-server ./mocks/mock-server-data.json --port 3123 --host localhost"
   },
   "devDependencies": {
@@ -27,6 +27,7 @@
     "eslint": "8.49.0",
     "eslint-config-htmlacademy": "9.1.1",
     "json-server": "1.0.0-beta.2",
+    "nodemon": "3.1.7",
     "pino-pretty": "11.2.2",
     "rimraf": "5.0.1",
     "ts-node": "10.9.2",
@@ -49,5 +50,10 @@
     "mongoose": "8.6.3",
     "pino": "9.4.0",
     "reflect-metadata": "0.2.2"
+  },
+  "imports": {
+    "#types/": "./src/shared/types/",
+    "#shared/*": "./src/shared/*",
+    "#libs/*": "./src/shared/libs/*"
   }
 }

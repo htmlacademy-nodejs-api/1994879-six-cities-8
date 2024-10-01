@@ -1,7 +1,7 @@
 import { OfferGenerator } from './offer-generator.interface.js';
-import { getRandomBoolean, getRandomDate, getRandomInRange, getRandomItem, getRandomItems } from '@shared/helpers/common.js' ;
+import { getRandomBoolean, getRandomDate, getRandomInRange, getRandomItem, getRandomItems } from '#shared/helpers/common.js' ;
 import { PriceLimit, RatingLimit, RoomLimit, AdultLimit } from './const.js';
-import { OfferType, MockServerData, CityName, UserType } from '@shared/types/index.js';
+import { OfferType, MockServerData, CityName, UserType } from '#types/index.js';
 
 export class TSVOfferGenerator implements OfferGenerator {
   constructor(private readonly mockData: MockServerData) {}

@@ -3,7 +3,7 @@ import { injectable } from 'inversify';
 import { resolve } from 'node:path';
 
 import { Logger } from './logger.interface.js';
-import { getCurrentModuleDirectoryPath } from '@shared/helpers/file-system.js';
+import { getCurrentModuleDirectoryPath } from '#shared/helpers/file-system.js';
 
 @injectable()
 export class PinoLogger implements Logger {
