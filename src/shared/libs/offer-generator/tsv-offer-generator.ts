@@ -1,6 +1,6 @@
 import { OfferGenerator } from './offer-generator.interface.js';
 import { getRandomBoolean, getRandomDate, getRandomInRange, getRandomItem, getRandomItems } from '#shared/helpers/common.js' ;
-import { PriceLimit, RatingLimit, RoomLimit, AdultLimit } from '#shared/helpers/const.js';
+import { PriceLimit, RatingLimit, RoomLimit, AdultLimit, OfferConstant } from '#shared/modules/offer/const.js';
 import { OfferType, MockServerData, CityName, UserType } from '#types/index.js';
 
 export class TSVOfferGenerator implements OfferGenerator {
@@ -11,7 +11,7 @@ export class TSVOfferGenerator implements OfferGenerator {
     const description = getRandomItem<string>(this.mockData.descriptions);
     const postDate = getRandomDate().toISOString();
     const previewImage = getRandomItem<string>(this.mockData.previewImages);
-    const images = getRandomItems<string>(this.mockData.images);
+    const images = Array.from({ length: OfferConstant.ImageCount }, () => getRandomItem<string>(this.mockData.images));
     const isPremium = getRandomBoolean();
     const isFavorite = getRandomBoolean();
     const rating = getRandomInRange(RatingLimit, 1).toString();

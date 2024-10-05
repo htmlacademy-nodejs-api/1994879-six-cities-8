@@ -26,10 +26,10 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   @prop({ type: () => String, enum: CityName })
   public cityName: CityName;
 
-  @prop({})
+  @prop({ required: true })
   public previewImage: string;
 
-  @prop({ type: Array })
+  @prop({ type: Array, allowMixed: 0 })
   public images: string[];
 
   @prop({ required: true })
@@ -53,10 +53,10 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   @prop({ required: true })
   public price: number;
 
-  @prop({ type: Array, required: true, default: [] })
+  @prop({ type: Array, required: true, default: [], allowMixed: 0 })
   public goods: Goods[];
 
-  @prop({ type: Schema.Types.Mixed, required: true })
+  @prop({ type: Schema.Types.Mixed, required: true, allowMixed: 0 })
   public location: Location;
 
   @prop({ ref: UserEntity, required: true })
