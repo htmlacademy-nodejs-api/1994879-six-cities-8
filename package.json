@@ -1,13 +1,12 @@
 {
   "name": "six-cities",
-  "version": "7.0.0",
+  "version": "1.0.0",
   "description": "Проект «Шесть городов» от HTML Academy",
   "keywords": [
     "rest",
     "api",
     "node.js"
   ],
-  "main": "main.js",
   "scripts": {
     "start": "npm run build && node ./dist/main.rest.js",
     "start:dev": "nodemon",
