@@ -2,7 +2,7 @@ import { defaultClasses, getModelForClass, prop, modelOptions } from '@typegoose
 import { Image, User, UserType } from '#types/index.js';
 import { hashPassword } from '#shared/helpers/hash.js';
 import { verifyPassword } from '#shared/helpers/hash.js';
-import { PasswordLimit, UserNameLimit } from './const.js';
+import { UserNameLimit } from './const.js';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export interface UserEntity extends defaultClasses.Base {}
@@ -27,7 +27,7 @@ export class UserEntity extends defaultClasses.TimeStamps implements User {
   @prop({required: true, enum: UserType, default: UserType.Regular})
   public type: UserType;
 
-  @prop({ required: true, default: '', minlength: PasswordLimit.Min, maxlength: PasswordLimit.Max })
+  @prop({ required: true, default: '' })
   private password?: string;
 
   constructor(userData: User) {

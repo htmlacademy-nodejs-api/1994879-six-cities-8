@@ -1,5 +1,10 @@
 import { CityName, Location } from '#types/index.js';
 
+export const OfferConstant = {
+  DefaultCount: 60,
+  ImageCount: 6,
+};
+
 export const PriceLimit = {
   Min: 100,
   Max: 100000
@@ -18,11 +23,6 @@ export const AdultLimit = {
 export const RatingLimit = {
   Min: 1,
   Max: 5
-};
-
-export const ImageLimit = {
-  Min: 0,
-  Max: 6
 };
 
 export const Cities: Record<CityName, Location> = {

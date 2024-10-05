@@ -110,7 +110,7 @@ npm start:dev
 ```npm run mock:server```
 3. Сгенерировать тестовые данные 
 ```sh
-npm run ts ./src/main.cli.ts -- --generate 60 ./mocks/new-offers.tsv http://localhost:3123/api
+npm run ts ./src/main.cli.ts -- -- --generate 10 ./mocks/new-offers.tsv http://localhost:3123/api
 ```
 4. Запустить докер ```docker compose -p "six-cities" up -d```
 5. Заполнить базу данных сгенерированными значениями
