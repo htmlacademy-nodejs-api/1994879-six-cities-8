@@ -1,9 +1,7 @@
 import { defaultClasses, getModelForClass, modelOptions, prop, Ref } from '@typegoose/typegoose';
 import { UserEntity } from '#shared/modules/user/index.js';
-import { CityName } from '#types/city-name.enum.js';
-import { Goods } from '../../types/goods.type.enum.js';
-import { OfferType } from '../../types/offer.type.enum.js';
-import { Location } from '../../types/location.type.js';
+import { CityName, Goods, OfferType, Location } from '#types/index.js';
+import { Schema } from 'mongoose';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export interface OfferEntity extends defaultClasses.Base {}
@@ -28,38 +26,37 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   @prop({ type: () => String, enum: CityName })
   public cityName: CityName;
 
-  @prop()
-
+  @prop({})
   public previewImage: string;
 
-  @prop()
+  @prop({ type: Array })
   public images: string[];
 
-  @prop()
+  @prop({ required: true })
   public isPremium: boolean;
 
-  @prop()
+  @prop({ required: true })
   public isFavorite: boolean;
 
-  @prop()
+  @prop({ required: true })
   public rating: number;
 
-  @prop({ required: true })
+  @prop({ type: () => String, enum: OfferType, required: true })
   public type: OfferType;
 
-  @prop()
+  @prop({ required: true })
   public bedrooms: number;
 
-  @prop()
+  @prop({ required: true })
   public maxAdults: number;
 
-  @prop()
+  @prop({ required: true })
   public price: number;
 
-  @prop({ required: true, default: [] })
+  @prop({ type: Array, required: true, default: [] })
   public goods: Goods[];
 
-  @prop()
+  @prop({ type: Schema.Types.Mixed, required: true })
   public location: Location;
 
   @prop({ ref: UserEntity, required: true })
