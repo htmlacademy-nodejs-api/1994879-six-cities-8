@@ -18,7 +18,7 @@ export class UserEntity extends defaultClasses.TimeStamps implements User {
   @prop({ unique: true, required: true })
   public email: string;
 
-  @prop({ required: false, default: '/unknown-raccoon.svg', type: String })
+  @prop({ default: '', type: String })
   public avatarUrl: Image;
 
   @prop({ required: true, minlength: UserNameLimit.Min, maxlength: UserNameLimit.Max })
@@ -27,7 +27,7 @@ export class UserEntity extends defaultClasses.TimeStamps implements User {
   @prop({required: true, enum: UserType, default: UserType.Regular})
   public type: UserType;
 
-  @prop({ required: true, default: '' })
+  @prop({ required: true })
   private password?: string;
 
   constructor(userData: User) {
