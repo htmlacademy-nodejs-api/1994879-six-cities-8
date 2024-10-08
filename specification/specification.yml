@@ -161,7 +161,7 @@ paths:
       operationId: getOffers
       parameters:
       - in: query
-        name: limit
+        name: count
         description: Количество предложений на странице
         required: false
         schema:

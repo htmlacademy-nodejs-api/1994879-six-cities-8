@@ -4,6 +4,17 @@ import { Range } from '#types/range.interface.js';
 export const OfferConstant = {
   DefaultCount: 60,
   ImageCount: 6,
+  GoodsMinimum: 1,
+};
+
+export const TitleLimit: Range = {
+  Min: 10,
+  Max: 100
+};
+
+export const DescriptionLimit: Range = {
+  Min: 20,
+  Max: 1024
 };
 
 export const PriceLimit: Range = {
@@ -25,6 +36,11 @@ export const RatingLimit: Range = {
   Min: 1,
   Max: 5
 };
+
+export enum OfferRoute {
+  Root = '/',
+  OfferId = '/:offerId'
+}
 
 export const Cities: Record<CityName, Location> = {
   Paris: { latitude: 48.85661, longitude: 2.351499 },

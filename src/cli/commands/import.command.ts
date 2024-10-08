@@ -45,7 +45,6 @@ export class ImportCommand implements Command {
     await this.offerService.create({
       title: offer.title,
       description: offer.description,
-      postDate: offer.postDate,
       cityName: offer.city.name,
       previewImage: offer.previewImage,
       images: offer.images,

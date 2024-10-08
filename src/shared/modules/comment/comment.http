@@ -11,6 +11,6 @@ Content-Type: application/json
 
 {
   "comment": "Это новый комментарий",
-  "rating": "3.3",
+  "rating": 4.3,
   "userId": "6701670a0d6b23f371f636c7"
 }
