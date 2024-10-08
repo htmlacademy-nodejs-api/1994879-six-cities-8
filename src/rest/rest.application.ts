@@ -6,6 +6,7 @@ import { Component } from '#types/index.js';
 import { DatabaseClient } from '#libs/database-client/index.js';
 import { Controller, ExceptionFilter } from '#libs/rest/index.js';
 import { getMongoURI } from '#shared/helpers/database.js';
+import { AppRoute } from './rest.const.js';
 
 @injectable()
 export class RestApplication {
@@ -16,6 +17,7 @@ export class RestApplication {
     @inject(Component.Config) private readonly config: Config<RestSchema>,
     @inject(Component.DatabaseClient) private readonly databaseClient: DatabaseClient,
     @inject(Component.ExceptionFilter) private readonly appExceptionFilter: ExceptionFilter,
+    @inject(Component.CommentController) private readonly commentController: Controller,
     @inject(Component.OfferController) private readonly offerController: Controller,
     @inject(Component.UserController) private readonly userController: Controller,
   ) {
@@ -40,8 +42,9 @@ export class RestApplication {
   }
 
   private async _initControllers() {
-    this.server.use('/offers', this.offerController.router);
-    this.server.use('/users', this.userController.router);
+    this.server.use(AppRoute.Offer, this.commentController.router);
+    this.server.use(AppRoute.Offer, this.offerController.router);
+    this.server.use(AppRoute.User, this.userController.router);
   }
 
   private async _initMiddleware() {

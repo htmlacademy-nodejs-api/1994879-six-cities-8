@@ -11,3 +11,10 @@ export const PasswordLimit: Range = {
   Min: 6,
   Max:12,
 };
+
+export enum UserRoute {
+  Register = '/register',
+  Login = '/login',
+  Logout = '/logout',
+  Avatar = '/:userId/avatar',
+}

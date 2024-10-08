@@ -30,7 +30,7 @@ export function getRandomDate(): Date {
   return new Date(randomTimestamp);
 }
 
-export function fillDTO<T, V>(someDto: ClassConstructor<T>, plainObject: V) {
+export function fillDto<T, V>(someDto: ClassConstructor<T>, plainObject: V) {
   return plainToInstance(someDto, plainObject, { excludeExtraneousValues: true });
 }
 
