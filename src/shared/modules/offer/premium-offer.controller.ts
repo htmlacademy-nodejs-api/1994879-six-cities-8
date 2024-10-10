@@ -20,7 +20,8 @@ export class PremiumOfferController extends BaseController {
   }
 
   public async index(req: Request, res: Response): Promise<void> {
-    const offers = await this.offerService.findById(req.query.city as string);
+    const city = req.query.city as string;
+    const offers = await this.offerService.findByPremium(city);
     this.ok(res, fillDto(OfferRdo, offers));
   }
 }
