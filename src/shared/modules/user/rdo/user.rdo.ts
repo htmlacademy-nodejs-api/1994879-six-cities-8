@@ -1,4 +1,5 @@
 import { Expose } from 'class-transformer';
+import { UserType } from '#types/user.type.enum.js';
 
 export class UserRdo {
   @Expose()
@@ -14,5 +15,5 @@ export class UserRdo {
   public name: string;
 
   @Expose()
-  public type: string;
+  public type: UserType;
 }
