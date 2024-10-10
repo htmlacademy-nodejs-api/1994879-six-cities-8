@@ -1,5 +1,6 @@
 import { Expose, Type } from 'class-transformer';
 import { UserRdo } from '../../user/rdo/user.rdo.js';
+import { IsNumber, Matches } from 'class-validator';
 
 export class CommentRdo {
   @Expose()
@@ -9,7 +10,9 @@ export class CommentRdo {
   public comment: string;
 
   @Expose()
-  public rating: string;
+  @IsNumber()
+  @Matches(/^\d+(\.0)?$/)
+  public rating: number;
 
   @Expose({ name: 'createdAt'})
   public postDate: string;

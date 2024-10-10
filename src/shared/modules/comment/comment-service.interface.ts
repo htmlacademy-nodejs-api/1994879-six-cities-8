@@ -7,4 +7,5 @@ export interface CommentService {
   create(dto: CreateCommentDto): Promise<DocumentType<CommentEntity>>;
   findByOfferId(offerId: string): Promise<DocumentType<CommentEntity>[]>;
   deleteByOfferId(offerId: string): Promise<number | null>;
+  calculateRatingAndCommentsCount(offerId: string): Promise<[number, number]> ;
 }

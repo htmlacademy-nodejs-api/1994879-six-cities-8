@@ -1,6 +1,6 @@
 import { City, Goods, Image, Location, OfferType } from '#types/index.js';
 import { ArrayMinSize, IsArray, IsBooleanString, IsEnum, IsNumber, IsObject, IsString, Length, Max, Min } from 'class-validator';
-import { AdultLimit, DescriptionLimit, PriceLimit, RatingLimit, RoomLimit, TitleLimit } from '../const.js';
+import { AdultLimit, DescriptionLimit, PriceLimit, RoomLimit, TitleLimit } from '../const.js';
 
 export class CreateOfferDto {
   @IsString()
@@ -25,11 +25,6 @@ export class CreateOfferDto {
 
   @IsBooleanString()
   public isFavorite: boolean;
-
-  @IsNumber()
-  @Min(RatingLimit.Min)
-  @Max(RatingLimit.Max)
-  public rating: number;
 
   @IsEnum(OfferType)
   public type: OfferType;
