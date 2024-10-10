@@ -1,4 +1,4 @@
-import { City } from '#types/index.js';
+import { City, OfferType } from '#types/index.js';
 import {Expose } from 'class-transformer';
 
 export class OfferRdo {
@@ -27,7 +27,7 @@ export class OfferRdo {
   public rating: number;
 
   @Expose()
-  public type: string;
+  public type: OfferType;
 
   @Expose()
   public price: number;

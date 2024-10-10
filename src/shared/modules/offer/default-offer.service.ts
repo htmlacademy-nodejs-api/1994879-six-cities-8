@@ -24,14 +24,14 @@ export class DefaultOfferService implements OfferService {
   public async findById(offerId: string): Promise<DocumentType<OfferEntity> | null> {
     return this.offerModel
       .findById(offerId)
-      .populate(['userId'])
+      .populate('userId')
       .exec();
   }
 
   public async find(count: number = OfferConstant.DefaultCount, offset: number = 0): Promise<DocumentType<OfferEntity>[]> {
     return this.offerModel
       .find({}, {}, { limit: count, skip: offset })
-      .populate(['userId'])
+      .populate('userId')
       .exec();
   }
 
@@ -44,7 +44,7 @@ export class DefaultOfferService implements OfferService {
   public async updateById(offerId: string, dto: UpdateOfferDto): Promise<DocumentType<OfferEntity> | null> {
     return this.offerModel
       .findByIdAndUpdate(offerId, dto, {new: true})
-      .populate(['userId'])
+      .populate('userId')
       .exec();
   }
 
@@ -65,7 +65,7 @@ export class DefaultOfferService implements OfferService {
       .find()
       .sort({ createdAt: SortType.Down })
       .limit(count)
-      .populate(['userId'])
+      .populate('userId')
       .exec();
   }
 
@@ -74,7 +74,7 @@ export class DefaultOfferService implements OfferService {
       .find()
       .sort({ commentCount: SortType.Down })
       .limit(count)
-      .populate(['userId'])
+      .populate('userId')
       .exec();
   }
 
@@ -95,7 +95,7 @@ export class DefaultOfferService implements OfferService {
     )
       .sort({ createdAt: SortType.Down })
       .limit(OfferConstant.PremiumCount)
-      .populate(['userId'])
+      .populate('userId')
       .exec();
   }
 
