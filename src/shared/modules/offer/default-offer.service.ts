@@ -77,4 +77,39 @@ export class DefaultOfferService implements OfferService {
       .populate(['userId'])
       .exec();
   }
+
+  public async findByPremium(cityName: string): Promise<DocumentType<OfferEntity>[]> {
+    return await this.offerModel.find(
+      {
+        city: cityName,
+        isPremium: true,
+      },
+      [
+        {
+          $addFields: {
+            id: { $toString: '$_id' },
+            commentsCount: { $size: '$comments' },
+          },
+        },
+      ]
+    )
+      .sort({ createdAt: SortType.Down })
+      .limit(OfferConstant.PremiumCount)
+      .populate(['userId'])
+      .exec();
+  }
+
+  public async findByFavorite(): Promise<DocumentType<OfferEntity>[]> {
+    return await this.offerModel.find(
+      {
+        isFavorite: true,
+      }
+    ).exec();
+  }
+
+  public async addOrRemoveFavorite(offerId: string, dto: UpdateOfferDto): Promise<DocumentType<OfferEntity> | null> {
+    return await this.offerModel
+      .findByIdAndUpdate(offerId, dto, {new: true})
+      .exec();
+  }
 }
