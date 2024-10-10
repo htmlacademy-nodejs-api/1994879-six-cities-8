@@ -7,11 +7,11 @@ import { DefaultCommentService } from './default-comment.service.js';
 import { CommentController } from './comment.controller.js';
 
 export function createCommentContainer() {
-  const commentContainer = new Container();
+  const container = new Container();
 
-  commentContainer.bind<CommentService>(Component.CommentService).to(DefaultCommentService).inSingletonScope();
-  commentContainer.bind<types.ModelType<CommentEntity>>(Component.CommentModel).toConstantValue(CommentModel);
-  commentContainer.bind<CommentController>(Component.CommentController).to(CommentController).inSingletonScope();
+  container.bind<CommentService>(Component.CommentService).to(DefaultCommentService).inSingletonScope();
+  container.bind<types.ModelType<CommentEntity>>(Component.CommentModel).toConstantValue(CommentModel);
+  container.bind<CommentController>(Component.CommentController).to(CommentController).inSingletonScope();
 
-  return commentContainer;
+  return container;
 }

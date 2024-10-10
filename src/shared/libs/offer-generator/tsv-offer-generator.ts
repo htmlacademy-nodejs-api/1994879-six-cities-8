@@ -1,6 +1,6 @@
 import { OfferGenerator } from './offer-generator.interface.js';
 import { getRandomBoolean, getRandomDate, getRandomInRange, getRandomItem, getRandomItems } from '#shared/helpers/common.js' ;
-import { PriceLimit, RatingLimit, RoomLimit, AdultLimit, OfferConstant } from '#shared/modules/offer/const.js';
+import { PriceLimit, RatingLimit, RoomLimit, AdultLimit, OfferConstant, CitiesLocation } from '#shared/modules/offer/const.js';
 import { OfferType, MockServerData, CityName, UserType } from '#types/index.js';
 
 export class TSVOfferGenerator implements OfferGenerator {
@@ -25,7 +25,8 @@ export class TSVOfferGenerator implements OfferGenerator {
     const userType = getRandomItem<string>(Object.keys(UserType));
     const email = getRandomItem<string>(this.mockData.emails);
     const city = getRandomItem<string>(Object.keys(CityName));
-    const cityLocation = getRandomItem<string>(this.mockData.coordinates);
+    const { latitude, longitude } = CitiesLocation[city as CityName];
+    const cityLocation = `${latitude},${longitude}`;
     const location = getRandomItem<string>(this.mockData.coordinates);
 
     return [

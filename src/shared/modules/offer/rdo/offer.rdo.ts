@@ -1,4 +1,4 @@
-import { CityName } from '#types/index.js';
+import { City } from '#types/index.js';
 import {Expose } from 'class-transformer';
 
 export class OfferRdo {
@@ -11,8 +11,8 @@ export class OfferRdo {
   @Expose({ name: 'createdAt' })
   public postDate: Date;
 
-  @Expose({ name: 'cityName' })
-  public city: CityName;
+  @Expose()
+  public city: City;
 
   @Expose()
   public previewImage: string;

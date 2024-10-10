@@ -16,6 +16,7 @@ export abstract class BaseController implements Controller {
     protected readonly logger: Logger
   ) {
     this._router = express.Router();
+    this.logger.info(`Create ${this.constructor.name}:`);
   }
 
   get router() {

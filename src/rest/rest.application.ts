@@ -20,6 +20,8 @@ export class RestApplication {
     @inject(Component.CommentController) private readonly commentController: Controller,
     @inject(Component.OfferController) private readonly offerController: Controller,
     @inject(Component.UserController) private readonly userController: Controller,
+    @inject(Component.PremiumOfferController) private readonly premiumOfferController: Controller,
+    @inject(Component.FavoriteOfferController) private readonly favoriteOfferController: Controller,
   ) {
     this.server = express();
   }
@@ -45,6 +47,8 @@ export class RestApplication {
     this.server.use(AppRoute.Offer, this.commentController.router);
     this.server.use(AppRoute.Offer, this.offerController.router);
     this.server.use(AppRoute.User, this.userController.router);
+    this.server.use(AppRoute.Premium, this.premiumOfferController.router);
+    this.server.use(AppRoute.Favorite, this.favoriteOfferController.router);
   }
 
   private async _initMiddleware() {

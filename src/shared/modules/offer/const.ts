@@ -42,7 +42,7 @@ export enum OfferRoute {
   OfferId = '/:offerId'
 }
 
-export const Cities: Record<CityName, Location> = {
+export const CitiesLocation: Record<CityName, Location> = {
   Paris: { latitude: 48.85661, longitude: 2.351499 },
   Cologne: { latitude: 50.938361, longitude: 6.959974 },
   Brussels: { latitude: 50.846557, longitude: 4.351697 },

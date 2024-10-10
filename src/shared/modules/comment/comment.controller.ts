@@ -16,7 +16,6 @@ export class CommentController extends BaseController {
   ) {
     super(logger);
 
-    this.logger.info(`[${Component.CommentController.description}]:`);
     this.addRoute({ path: CommentRoute.OfferId, method: HttpMethod.Get, handler: this.index });
     this.addRoute({ path: CommentRoute.OfferId, method: HttpMethod.Post, handler: this.create });
   }

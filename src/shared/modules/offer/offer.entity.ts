@@ -1,6 +1,6 @@
 import { defaultClasses, getModelForClass, modelOptions, prop, Ref } from '@typegoose/typegoose';
 import { UserEntity } from '#shared/modules/user/index.js';
-import { CityName, Goods, OfferType, Location } from '#types/index.js';
+import { Goods, OfferType, Location, City } from '#types/index.js';
 import { Schema } from 'mongoose';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
@@ -23,8 +23,8 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   @prop()
   public date: Date;
 
-  @prop({ type: () => String, enum: CityName })
-  public cityName: CityName;
+  @prop({ type: Schema.Types.Mixed, required: true, allowMixed: 0 })
+  public city: City;
 
   @prop({ required: true })
   public previewImage: string;

@@ -1,4 +1,4 @@
-import { CityName, Goods, Image, Location, OfferType } from '#types/index.js';
+import { City, Goods, Image, Location, OfferType } from '#types/index.js';
 import { ArrayMinSize, IsArray, IsBooleanString, IsEnum, IsNumber, IsObject, IsString, Length, Max, Min } from 'class-validator';
 import { AdultLimit, DescriptionLimit, PriceLimit, RatingLimit, RoomLimit, TitleLimit } from '../const.js';
 
@@ -11,8 +11,8 @@ export class CreateOfferDto {
   @Length(DescriptionLimit.Min, DescriptionLimit.Max)
   public description: string;
 
-  @IsEnum(CityName)
-  public cityName: CityName;
+  @IsObject()
+  public city: City;
 
   @IsString()
   public previewImage: Image;
