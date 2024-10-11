@@ -33,7 +33,6 @@ Content-Type: application/json
 {
   "title": "Beautiful & luxurious studio at great location",
   "description": "A quiet cozy and picturesque that hides behind a a river by the unique lightness of Amsterdam.",
-  "dateOfPublication": "2024-05-28T00:00:00Z",
   "city": {
     "location": {
       "latitude": 52.370216,
@@ -48,7 +47,7 @@ Content-Type: application/json
   "type": "Apartment",
   "bedrooms": 3,
   "maxAdults": 4,
-  "price": 120,
+  "price": 0,
   "goods": ["Heating"],
   "userId": "67076fbce53a9610490aa2b3",
   "location": {

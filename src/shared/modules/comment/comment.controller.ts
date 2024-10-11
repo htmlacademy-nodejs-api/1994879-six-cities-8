@@ -1,9 +1,9 @@
 import { inject, injectable } from 'inversify';
 import { Response, Request } from 'express';
-import { BaseController, HttpMethod } from '#libs/rest/index.js';
+import { BaseController, DocumentExistsMiddleware, HttpMethod, ValidateDtoMiddleware, ValidateObjectIdMiddleware } from '#libs/rest/index.js';
 import { Logger } from '#libs/logger/index.js';
 import { Component } from '#types/index.js';
-import { CommentService } from '../comment/index.js';
+import { CommentService, CreateCommentDto } from '../comment/index.js';
 import { CommentRoute } from './const.js';
 import { fillDto } from '#shared/helpers/common.js';
 import { CommentRdo } from './rdo/comment.rdo.js';
@@ -18,8 +18,21 @@ export class CommentController extends BaseController {
   ) {
     super(logger);
 
-    this.addRoute({ path: CommentRoute.OfferId, method: HttpMethod.Get, handler: this.getComments });
-    this.addRoute({ path: CommentRoute.OfferId, method: HttpMethod.Post, handler: this.createComment });
+    this.addRoute({
+      path: CommentRoute.OfferId,
+      method: HttpMethod.Get,
+      handler: this.getComments,
+      middlewares: [
+        new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')
+      ]
+    });
+    this.addRoute({
+      path: CommentRoute.OfferId,
+      method: HttpMethod.Post,
+      handler: this.createComment,
+      middlewares: [ new ValidateDtoMiddleware(CreateCommentDto) ]
+    });
   }
 
   public async getComments(req: Request, res: Response): Promise<void> {

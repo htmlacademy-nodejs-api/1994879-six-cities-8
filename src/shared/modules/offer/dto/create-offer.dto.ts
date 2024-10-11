@@ -1,56 +1,61 @@
 import { City, Goods, Image, Location, OfferType } from '#types/index.js';
-import { ArrayMinSize, IsArray, IsBooleanString, IsEnum, IsNumber, IsObject, IsString, Length, Max, Min } from 'class-validator';
-import { AdultLimit, DescriptionLimit, PriceLimit, RoomLimit, TitleLimit } from '../const.js';
+import { ArrayMaxSize, ArrayMinSize, IsArray, IsBooleanString, IsEnum, IsNumber, IsObject, IsString, Length, Matches, Max, Min, ValidateNested } from 'class-validator';
+import { AdultLimit, DescriptionLimit, OfferConstant, PriceLimit, RoomLimit, TitleLimit } from '../const.js';
+import { OfferValidation } from './messages.js';
 
 export class CreateOfferDto {
-  @IsString()
-  @Length(TitleLimit.Min, TitleLimit.Max)
+  @IsString({message: OfferValidation.title.invalidFormat})
+  @Length(TitleLimit.Min, TitleLimit.Max, {message: OfferValidation.title.invalidLength})
   public title: string;
 
-  @IsString()
-  @Length(DescriptionLimit.Min, DescriptionLimit.Max)
+  @IsString({message: OfferValidation.description.invalidFormat})
+  @Length(DescriptionLimit.Min, DescriptionLimit.Max, {message: OfferValidation.description.invalidLength})
   public description: string;
 
-  @IsObject()
+  @IsObject({message: OfferValidation.city.invalid})
   public city: City;
 
-  @IsString()
+  @IsString({message: OfferValidation.previewImage.invalidFormat})
   public previewImage: Image;
 
-  @IsString()
+  @IsArray({message: OfferValidation.images.invalidFormat})
+  @ArrayMinSize(OfferConstant.ImageCount, {message: OfferValidation.images.invalidValue})
+  @ArrayMaxSize(OfferConstant.ImageCount, {message: OfferValidation.images.invalidValue})
+  @Matches(/(?:\.png|\.jpg)$/, { each: true, message: OfferValidation.images.invalidFormat})
   public images: Image[];
 
-  @IsBooleanString()
+  @IsBooleanString({message: OfferValidation.isPremium.invalidFormat})
   public isPremium: boolean;
 
-  @IsBooleanString()
+  @IsBooleanString({message: OfferValidation.isFavorite.invalidFormat})
   public isFavorite: boolean;
 
-  @IsEnum(OfferType)
+  @IsEnum(OfferType, {message: OfferValidation.type.invalid})
   public type: OfferType;
 
-  @IsNumber()
-  @Min(RoomLimit.Min)
-  @Max(RoomLimit.Max)
+  @IsNumber({}, {message: OfferValidation.bedrooms.invalidFormat})
+  @Min(RoomLimit.Min, {message: OfferValidation.bedrooms.invalidValue})
+  @Max(RoomLimit.Max, {message: OfferValidation.bedrooms.invalidValue})
   public bedrooms: number;
 
-  @IsNumber()
-  @Min(AdultLimit.Min)
-  @Max(AdultLimit.Max)
+  @IsNumber({}, {message: OfferValidation.maxAdults.invalidFormat})
+  @Min(AdultLimit.Min, {message: OfferValidation.maxAdults.invalidValue})
+  @Max(AdultLimit.Max, {message: OfferValidation.maxAdults.invalidValue})
   public maxAdults: number;
 
-  @IsNumber()
-  @Min(PriceLimit.Min)
-  @Max(PriceLimit.Max)
+  @IsNumber({}, {message: OfferValidation.price.invalidFormat})
+  @Min(PriceLimit.Min, {message: OfferValidation.price.invalidValue})
+  @Max(PriceLimit.Max, {message: OfferValidation.price.invalidValue})
   public price: number;
 
-  @IsArray()
-  @ArrayMinSize(1, { message: 'At least one good is required' })
+  @IsArray({message: OfferValidation.goods.invalidFormat})
+  @IsString({each: true, message: OfferValidation.goods.invalidFormat})
+  @ArrayMinSize(OfferConstant.GoodsMinimum, {message: OfferValidation.goods.invalidCount})
   public goods: Goods[];
 
-  @IsObject()
+  @ValidateNested({message: OfferValidation.location.invalid })
   public location: Location;
 
-  @IsString()
+  @IsString({message: OfferValidation.userId.invalid})
   public userId: string;
 }

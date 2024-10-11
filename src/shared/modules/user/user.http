@@ -34,4 +34,11 @@ Authorization: Bearer dG9yYW5zQG92ZXJsb29rLm5ldDpzaGluaW5n
 ### Отправить изображение
 
 POST http://localhost:5000/users/65258514a30fc6ef77c0edef/avatar HTTP/1.1
-Content-Type: multipart/form-data;
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="avatar"; filename="screen.png"
+Content-Type: image/png
+
+< /Users/spider_net/Desktop/screen.png
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
