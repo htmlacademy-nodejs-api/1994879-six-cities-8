@@ -16,10 +16,10 @@ export class FavoriteOfferController extends BaseController {
   ) {
     super(logger);
 
-    this.addRoute({path: OfferRoute.Root, method: HttpMethod.Get, handler: this.index});
+    this.addRoute({path: OfferRoute.Root, method: HttpMethod.Get, handler: this.getFavorites});
   }
 
-  public async index(req: Request, res: Response): Promise<void> {
+  public async getFavorites(req: Request, res: Response): Promise<void> {
     const offers = await this.offerService.findById(req.query.city as string);
     this.ok(res, fillDto(OfferRdo, offers));
   }

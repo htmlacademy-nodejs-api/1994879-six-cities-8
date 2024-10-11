@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
 import { Response, Request } from 'express';
-import { BaseController, HttpMethod } from '#libs/rest/index.js';
+import { BaseController, DocumentExistsMiddleware, HttpMethod, ValidateDtoMiddleware, ValidateObjectIdMiddleware } from '#libs/rest/index.js';
 import { Logger } from '#libs/logger/index.js';
 import { Component } from '#types/index.js';
 import { OfferService } from './offer-service.interface.js';
@@ -11,6 +11,7 @@ import { OfferRdo } from './rdo/offer.rdo.js';
 import { OfferFullRdo } from './rdo/offer-full.rdo.js';
 import { NotFoundOfferError } from './offer.error.js';
 import { CreateOfferRequest, ParamOfferId } from './offer-request.type.js';
+import { CreateOfferDto } from './dto/create-offer.dto.js';
 
 @injectable()
 export class OfferController extends BaseController {
@@ -21,14 +22,19 @@ export class OfferController extends BaseController {
   ) {
     super(logger);
 
-    this.addRoute({ path: OfferRoute.Root, method: HttpMethod.Get, handler: this.all });
-    this.addRoute({ path: OfferRoute.Root, method: HttpMethod.Post, handler: this.postOffer });
-    this.addRoute({ path: OfferRoute.OfferId, method: HttpMethod.Get, handler: this.getOffer });
-    this.addRoute({ path: OfferRoute.OfferId, method: HttpMethod.Patch, handler: this.patchOffer });
-    this.addRoute({ path: OfferRoute.OfferId, method: HttpMethod.Delete, handler: this.deleteOffer });
+    const middlewares = [
+      new ValidateObjectIdMiddleware('offerId'),
+      new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')
+    ];
+
+    this.addRoute({ path: OfferRoute.Root, method: HttpMethod.Get, handler: this.getAll });
+    this.addRoute({ path: OfferRoute.Root, method: HttpMethod.Post, handler: this.createOffer, middlewares: [new ValidateDtoMiddleware(CreateOfferDto)] });
+    this.addRoute({ path: OfferRoute.OfferId, method: HttpMethod.Get, handler: this.getOffer, middlewares });
+    this.addRoute({ path: OfferRoute.OfferId, method: HttpMethod.Patch, handler: this.updateOffer, middlewares });
+    this.addRoute({ path: OfferRoute.OfferId, method: HttpMethod.Delete, handler: this.deleteOffer, middlewares });
   }
 
-  public async all(req: Request, res: Response): Promise<void> {
+  public async getAll(req: Request, res: Response): Promise<void> {
     const offers = await this.offerService.find(Number(req.query.count), Number(req.query.offset));
     this.ok(res, fillDto(OfferFullRdo, offers));
   }
@@ -42,14 +48,14 @@ export class OfferController extends BaseController {
     this.ok(res, fillDto(OfferFullRdo, offer));
   }
 
-  public async postOffer(req: CreateOfferRequest, res: Response): Promise<void> {
+  public async createOffer(req: CreateOfferRequest, res: Response): Promise<void> {
     const { body: dto } = req;
     const newOffer = await this.offerService.create(dto);
     const offer = await this.offerService.findById(newOffer.id);
     this.created(res, fillDto(OfferFullRdo, offer));
   }
 
-  public async patchOffer(req: Request<ParamOfferId>, res: Response): Promise<void> {
+  public async updateOffer(req: Request<ParamOfferId>, res: Response): Promise<void> {
     const { body: dto, params: { offerId } } = req;
     const offer = await this.offerService.updateById(offerId, dto);
     this.ok(res, fillDto(OfferFullRdo, offer));

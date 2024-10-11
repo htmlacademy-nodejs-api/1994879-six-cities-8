@@ -4,4 +4,5 @@ export enum AppRoute {
   Comment = '/comment',
   Favorite = '/favorites',
   Premium = '/premium',
+  Upload = '/upload',
 }

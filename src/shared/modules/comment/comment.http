@@ -1,16 +1,16 @@
 ### Comment Endpoints
 
 ### Получение списка комментариев для предложения
-GET http://localhost:5000/offers/6701670a0d6b23f371f636ca/comments HTTP/1.1
+GET http://localhost:5000/offers/670818bfd219a73048d326d3/comments HTTP/1.1
 Content-Type: application/json
 
 ### Добавление комментария для предложения
 
-POST http://localhost:5000/offers/6701670a0d6b23f371f636ca/comments HTTP/1.1
+POST http://localhost:5000/offers/670818bfd219a73048d326d3/comments HTTP/1.1
 Content-Type: application/json
 
 {
   "comment": "Это новый комментарий",
-  "rating": 4.3,
-  "userId": "6701670a0d6b23f371f636c7"
+  "rating": 1,
+  "userId": "6707f2f17da83354280f0e56"
 }

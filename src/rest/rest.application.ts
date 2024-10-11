@@ -38,12 +38,12 @@ export class RestApplication {
     return this.databaseClient.connect(mongoUri);
   }
 
-  private async _initServer() {
+  private async initServer() {
     const port = this.config.get('PORT');
     this.server.listen(port);
   }
 
-  private async _initControllers() {
+  private async initControllers() {
     this.server.use(AppRoute.Offer, this.commentController.router);
     this.server.use(AppRoute.Offer, this.offerController.router);
     this.server.use(AppRoute.User, this.userController.router);
@@ -51,11 +51,12 @@ export class RestApplication {
     this.server.use(AppRoute.Favorite, this.favoriteOfferController.router);
   }
 
-  private async _initMiddleware() {
+  private async initMiddleware() {
     this.server.use(express.json());
+    this.server.use(AppRoute.Upload, express.static(this.config.get('UPLOAD_DIRECTORY')));
   }
 
-  private async _initExceptionFilters() {
+  private async initExceptionFilters() {
     this.server.use(this.appExceptionFilter.catch.bind(this.appExceptionFilter));
   }
 
@@ -64,19 +65,14 @@ export class RestApplication {
       this.logger.info('Application initialization');
       this.logger.info(`Get value from env $PORT: ${this.config.get('PORT')}`);
 
-      await this.initDb();
-      this.logger.info('Init database completed');
+      await Promise.all([
+        this.initDb(),
+        this.initMiddleware(),
+        this.initControllers(),
+        this.initExceptionFilters(),
+      ]);
 
-      await this._initMiddleware();
-      this.logger.info('App-level middleware initialization completed');
-
-      await this._initControllers();
-      this.logger.info('Controller initialization completed');
-
-      await this._initExceptionFilters();
-      this.logger.info('Exception filters initialization compleated');
-
-      await this._initServer();
+      await this.initServer();
       this.logger.info(`Server started on http://localhost:${this.config.get('PORT')}`);
     } catch (error) {
       this.logger.error('Error during application initialization', error as Error);

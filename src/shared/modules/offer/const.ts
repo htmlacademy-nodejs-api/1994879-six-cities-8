@@ -4,6 +4,7 @@ export const OfferConstant = {
   DefaultCount: 60,
   ImageCount: 6,
   PremiumCount: 3,
+  CommentsCount: 50,
   GoodsMinimum: 1,
 };
 

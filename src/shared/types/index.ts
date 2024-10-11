@@ -11,3 +11,4 @@ export { Goods } from './goods.type.enum.js';
 export { MockServerData } from './mock-server-data.type.js';
 export { SortType } from './sort-type.enum.js';
 export { Component } from './component.enum.js';
+export { DocumentExists } from './document-exists.interface.js';
