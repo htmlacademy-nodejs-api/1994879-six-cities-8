@@ -21,14 +21,14 @@ export class OfferController extends BaseController {
   ) {
     super(logger);
 
-    this.addRoute({ path: OfferRoute.Root, method: HttpMethod.Get, handler: this.all });
-    this.addRoute({ path: OfferRoute.Root, method: HttpMethod.Post, handler: this.postOffer });
+    this.addRoute({ path: OfferRoute.Root, method: HttpMethod.Get, handler: this.getAll });
+    this.addRoute({ path: OfferRoute.Root, method: HttpMethod.Post, handler: this.createOffer });
     this.addRoute({ path: OfferRoute.OfferId, method: HttpMethod.Get, handler: this.getOffer });
-    this.addRoute({ path: OfferRoute.OfferId, method: HttpMethod.Patch, handler: this.patchOffer });
+    this.addRoute({ path: OfferRoute.OfferId, method: HttpMethod.Patch, handler: this.updateOffer });
     this.addRoute({ path: OfferRoute.OfferId, method: HttpMethod.Delete, handler: this.deleteOffer });
   }
 
-  public async all(req: Request, res: Response): Promise<void> {
+  public async getAll(req: Request, res: Response): Promise<void> {
     const offers = await this.offerService.find(Number(req.query.count), Number(req.query.offset));
     this.ok(res, fillDto(OfferFullRdo, offers));
   }
@@ -42,14 +42,14 @@ export class OfferController extends BaseController {
     this.ok(res, fillDto(OfferFullRdo, offer));
   }
 
-  public async postOffer(req: CreateOfferRequest, res: Response): Promise<void> {
+  public async createOffer(req: CreateOfferRequest, res: Response): Promise<void> {
     const { body: dto } = req;
     const newOffer = await this.offerService.create(dto);
     const offer = await this.offerService.findById(newOffer.id);
     this.created(res, fillDto(OfferFullRdo, offer));
   }
 
-  public async patchOffer(req: Request<ParamOfferId>, res: Response): Promise<void> {
+  public async updateOffer(req: Request<ParamOfferId>, res: Response): Promise<void> {
     const { body: dto, params: { offerId } } = req;
     const offer = await this.offerService.updateById(offerId, dto);
     this.ok(res, fillDto(OfferFullRdo, offer));

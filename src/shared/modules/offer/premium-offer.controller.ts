@@ -16,10 +16,10 @@ export class PremiumOfferController extends BaseController {
   ) {
     super(logger);
 
-    this.addRoute({path: OfferRoute.Root, method: HttpMethod.Get, handler: this.index});
+    this.addRoute({path: OfferRoute.Root, method: HttpMethod.Get, handler: this.getPremium});
   }
 
-  public async index(req: Request, res: Response): Promise<void> {
+  public async getPremium(req: Request, res: Response): Promise<void> {
     const city = req.query.city as string;
     const offers = await this.offerService.findByPremium(city);
     this.ok(res, fillDto(OfferRdo, offers));
