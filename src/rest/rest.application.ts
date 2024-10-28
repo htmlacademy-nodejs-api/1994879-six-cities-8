@@ -32,7 +32,7 @@ export class RestApplication {
       this.config.get('DB_PASSWORD'),
       this.config.get('DB_HOST'),
       this.config.get('DB_PORT'),
-      this.config.get('DB_NAME')
+      this.config.get('DB_NAME'),
     );
 
     return this.databaseClient.connect(mongoUri);
@@ -65,12 +65,7 @@ export class RestApplication {
       this.logger.info('Application initialization');
       this.logger.info(`Get value from env $PORT: ${this.config.get('PORT')}`);
 
-      await Promise.all([
-        this.initDb(),
-        this.initMiddleware(),
-        this.initControllers(),
-        this.initExceptionFilters(),
-      ]);
+      await Promise.all([this.initDb(), this.initMiddleware(), this.initControllers(), this.initExceptionFilters()]);
 
       await this.initServer();
       this.logger.info(`Server started on http://localhost:${this.config.get('PORT')}`);

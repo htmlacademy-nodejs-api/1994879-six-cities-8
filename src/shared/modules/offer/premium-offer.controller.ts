@@ -12,11 +12,11 @@ import { OfferRdo } from './rdo/offer.rdo.js';
 export class PremiumOfferController extends BaseController {
   constructor(
     @inject(Component.Logger) protected readonly logger: Logger,
-    @inject(Component.OfferService) private readonly offerService: OfferService
+    @inject(Component.OfferService) private readonly offerService: OfferService,
   ) {
     super(logger);
 
-    this.addRoute({path: OfferRoute.Root, method: HttpMethod.Get, handler: this.getPremium});
+    this.addRoute({ path: OfferRoute.Root, method: HttpMethod.Get, handler: this.getPremium });
   }
 
   public async getPremium(req: Request, res: Response): Promise<void> {

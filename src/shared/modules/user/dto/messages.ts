@@ -2,7 +2,7 @@ import { PasswordLimit, UserNameLimit } from '#shared/modules/user/const.js';
 
 export const UserValidation = {
   email: {
-    invalidFormat: 'email must be a valid address'
+    invalidFormat: 'email must be a valid address',
   },
   avatarUrl: {
     invalidFormat: 'avatarPath is required',
@@ -16,6 +16,6 @@ export const UserValidation = {
   },
   password: {
     invalidFormat: 'Password is required',
-    invalidLength: `Password length must be between ${PasswordLimit.Min} and ${PasswordLimit.Max}`
+    invalidLength: `Password length must be between ${PasswordLimit.Min} and ${PasswordLimit.Max}`,
   },
 };

@@ -22,4 +22,4 @@ export type Offer = {
   goods: Goods[];
   host: User;
   location: Location;
-}
+};

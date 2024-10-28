@@ -41,13 +41,13 @@ Content-Type: application/json
     "name": "Amsterdam"
   },
   "previewImage": "img/1.png",
-  "images": ["img/1.png"],
-  "isPremium": false,
-  "isFavorite": false,
+  "images": ["img/1.png", "img/1.png", "img/1.png", "img/1.png", "img/1.png", "img/1.png"],
+  "isPremium": "false",
+  "isFavorite": "false",
   "type": "Apartment",
   "bedrooms": 3,
   "maxAdults": 4,
-  "price": 0,
+  "price": 120,
   "goods": ["Heating"],
   "userId": "67076fbce53a9610490aa2b3",
   "location": {
@@ -70,7 +70,7 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuc0BvdmVybG9vay5uZXQiLCJuYW1lIjoiSmFjayIsImlkIjoiNjY2YzI0YTE1OTY3YWUwNDk2ODRjMTM5IiwiaWF0IjoxNzE4MzcwNTU3LCJleHAiOjE3MTg1NDMzNTd9.Sa2djeI_8HOpqpxxhC4IvI6U6VatIn7qCTSIptTVYXU
 
 {
-  "title": "Новое предложение 77777"
+  "title": "-= New offer =-"
 }
 
 ###

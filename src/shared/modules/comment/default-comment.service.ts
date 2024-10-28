@@ -8,9 +8,7 @@ import { OfferConstant, RatingLimit } from '../offer/const.js';
 
 @injectable()
 export class DefaultCommentService implements CommentService {
-  constructor(
-    @inject(Component.CommentModel) private readonly commentModel: types.ModelType<CommentEntity>,
-  ) {}
+  constructor(@inject(Component.CommentModel) private readonly commentModel: types.ModelType<CommentEntity>) {}
 
   public async create(dto: CreateCommentDto): Promise<DocumentType<CommentEntity>> {
     const comment = await this.commentModel.create(dto);
@@ -18,26 +16,29 @@ export class DefaultCommentService implements CommentService {
   }
 
   public async findByOfferId(offerId: string): Promise<DocumentType<CommentEntity>[]> {
-    return this.commentModel.find({offerId})
+    return this.commentModel
+      .find({ offerId })
       .sort({ createdAt: SortType.Down })
       .limit(OfferConstant.CommentsCount)
       .populate('userId');
   }
 
   public async deleteByOfferId(offerId: string): Promise<number> {
-    const result = await this.commentModel.deleteMany({offerId}).exec();
+    const result = await this.commentModel.deleteMany({ offerId }).exec();
     return result.deletedCount;
   }
 
   public async calculateRatingAndCommentsCount(offerId: string): Promise<[number, number]> {
     const data = await this.commentModel.aggregate([
       { $match: { offerId: new mongoose.Types.ObjectId(offerId) } },
-      { $group: {
-        _id: null,
-        count: { $sum: 1 },
-        averageRating: { $avg: '$rating' }
-      }},
-      { $unset: '_id'}
+      {
+        $group: {
+          _id: null,
+          count: { $sum: 1 },
+          averageRating: { $avg: '$rating' },
+        },
+      },
+      { $unset: '_id' },
     ]);
 
     if (data.length === 0) {

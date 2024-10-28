@@ -1,8 +1,7 @@
 import { inject, injectable } from 'inversify';
 import { DocumentType } from '@typegoose/typegoose';
 import { Response, Request } from 'express';
-import { StatusCodes } from 'http-status-codes';
-import { BaseController, HttpError, HttpMethod } from '#libs/rest/index.js';
+import { BaseController, HttpMethod } from '#libs/rest/index.js';
 import { Logger } from '#libs/logger/index.js';
 import { Component } from '#types/index.js';
 import { CreateUserRequest, LoginUserRequest } from './user-request.type.js';
@@ -19,7 +18,7 @@ export class UserController extends BaseController {
   constructor(
     @inject(Component.Logger) protected readonly logger: Logger,
     @inject(Component.UserService) private readonly userService: UserService,
-    @inject(Component.Config) private readonly configService: Config<RestSchema>,
+    @inject(Component.Config) private readonly configService: Config<RestSchema>
   ) {
     super(logger);
 
@@ -77,7 +76,9 @@ export class UserController extends BaseController {
     this.noContent(res, undefined);
   }
 
-  public async uploadAvatar() {
-    throw new HttpError(StatusCodes.INTERNAL_SERVER_ERROR, 'not implemented', 'UserController');
+  public async uploadAvatar(req: Request, res: Response) {
+    this.created(res, {
+      avatarUrl: req.file?.path,
+    });
   }
 }

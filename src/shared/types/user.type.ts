@@ -6,4 +6,4 @@ export type User = {
   avatarUrl: Image;
   type: UserType;
   email: string;
-}
+};

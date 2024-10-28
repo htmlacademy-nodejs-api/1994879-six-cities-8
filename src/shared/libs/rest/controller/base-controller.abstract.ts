@@ -6,15 +6,12 @@ import { Controller } from './controller.interface.js';
 import { Logger } from '#libs/logger/index.js';
 import { Route } from '#libs/rest/types/route.interface.js';
 
-
 @injectable()
 export abstract class BaseController implements Controller {
   private readonly DEFAULT_CONTENT_TYPE = 'application/json';
   private readonly _router: express.Router;
 
-  constructor(
-    protected readonly logger: Logger
-  ) {
+  constructor(protected readonly logger: Logger) {
     this._router = express.Router();
     this.logger.info(`Create ${this.constructor.name}:`);
   }
@@ -32,9 +29,7 @@ export abstract class BaseController implements Controller {
   }
 
   public send<T>(res: Response, statusCode: number, data: T): void {
-    res.type(this.DEFAULT_CONTENT_TYPE)
-      .status(statusCode)
-      .json(data);
+    res.type(this.DEFAULT_CONTENT_TYPE).status(statusCode).json(data);
   }
 
   public created<T>(res: Response, data: T): void {

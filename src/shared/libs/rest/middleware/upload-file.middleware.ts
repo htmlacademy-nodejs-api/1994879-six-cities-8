@@ -19,7 +19,7 @@ export class UploadFileMiddleware implements Middleware {
         const fileExtention = extension(file.mimetype);
         const filename = crypto.randomUUID();
         callback(null, `${filename}.${fileExtention}`);
-      }
+      },
     });
 
     const upload = multer({ storage }).single(this.fieldName);
