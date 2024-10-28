@@ -1,13 +1,21 @@
-import { AdultLimit, DescriptionLimit, OfferConstant, PriceLimit, RatingLimit, RoomLimit, TitleLimit } from '#shared/modules/offer/const.js';
+import {
+  AdultLimit,
+  DescriptionLimit,
+  OfferConstant,
+  PriceLimit,
+  RatingLimit,
+  RoomLimit,
+  TitleLimit,
+} from '#shared/modules/offer/const.js';
 
 export const OfferValidation = {
   title: {
     invalidFormat: 'title must be an string',
-    invalidLength: `Title length must be between ${TitleLimit.Min} and ${TitleLimit.Max}`
+    invalidLength: `Title length must be between ${TitleLimit.Min} and ${TitleLimit.Max}`,
   },
   description: {
     invalidFormat: 'description must be an string',
-    invalidLength: `Title length must be between ${DescriptionLimit.Min} and ${DescriptionLimit.Max}`
+    invalidLength: `Title length must be between ${DescriptionLimit.Min} and ${DescriptionLimit.Max}`,
   },
   city: {
     invalid: 'city field must be Paris, Cologne, Brussels, Amsterdam, Hamburg, Dusseldorf',
@@ -50,11 +58,12 @@ export const OfferValidation = {
   },
   goods: {
     invalidFormat: 'Goods must be string array',
-    invalidValue: 'Goods must be Breakfast | Air conditioning | Laptop friendly workspace | Baby seat | Washer | Towels | Fridge',
+    invalidValue:
+      'Goods must be Breakfast | Air conditioning | Laptop friendly workspace | Baby seat | Washer | Towels | Fridge',
     invalidCount: 'At least 1 item required',
   },
   location: {
-    invalid: 'Location must be an object with latitude and longitude values'
+    invalid: 'Location must be an object with latitude and longitude values',
   },
   offerId: {
     invalid: 'offerId field must be a valid id',

@@ -15,6 +15,10 @@ export class DefaultUserService implements UserService {
     @inject(Component.UserModel) private readonly userModel: types.ModelType<UserEntity>
   ) {}
 
+  public async exists(documentId: string): Promise<boolean> {
+    return (await this.userModel.exists({ _id: documentId })) !== null;
+  }
+
   public async create(dto: CreateUserDto, salt: string): Promise<DocumentType<UserEntity>> {
     const user = new UserEntity({ ...dto, avatarUrl: DEFAULT_AVATAR_FILE_NAME });
     user.setPassword(dto.password, salt);
@@ -26,7 +30,7 @@ export class DefaultUserService implements UserService {
   }
 
   public async findByEmail(email: string): Promise<DocumentType<UserEntity> | null> {
-    return this.userModel.findOne({email});
+    return this.userModel.findOne({ email });
   }
 
   public async findOrCreate(dto: CreateUserDto, salt: string): Promise<DocumentType<UserEntity>> {
@@ -40,8 +44,6 @@ export class DefaultUserService implements UserService {
   }
 
   public async updateById(userId: string, dto: UpdateUserDto): Promise<DocumentType<UserEntity> | null> {
-    return this.userModel
-      .findByIdAndUpdate(userId, dto, { new: true })
-      .exec();
+    return this.userModel.findByIdAndUpdate(userId, dto, { new: true }).exec();
   }
 }

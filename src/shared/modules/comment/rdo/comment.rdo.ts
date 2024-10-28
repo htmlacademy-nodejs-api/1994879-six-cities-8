@@ -14,10 +14,10 @@ export class CommentRdo {
   @Matches(/^\d+(\.0)?$/)
   public rating: number;
 
-  @Expose({ name: 'createdAt'})
+  @Expose({ name: 'createdAt' })
   public postDate: string;
 
-  @Expose({ name: 'userId'})
+  @Expose({ name: 'userId' })
   @Type(() => UserRdo)
   public user: UserRdo;
 }

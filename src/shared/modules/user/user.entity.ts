@@ -11,7 +11,7 @@ export interface UserEntity extends defaultClasses.Base {}
   schemaOptions: {
     collection: 'users',
     timestamps: true,
-  }
+  },
 })
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export class UserEntity extends defaultClasses.TimeStamps implements User {
@@ -24,7 +24,7 @@ export class UserEntity extends defaultClasses.TimeStamps implements User {
   @prop({ required: true, minlength: UserNameLimit.Min, maxlength: UserNameLimit.Max })
   public name: string;
 
-  @prop({required: true, enum: UserType, default: UserType.Regular})
+  @prop({ required: true, enum: UserType, default: UserType.Regular })
   public type: UserType;
 
   @prop({ required: true })

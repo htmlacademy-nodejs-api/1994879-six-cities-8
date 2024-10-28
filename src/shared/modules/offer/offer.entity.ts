@@ -11,14 +11,14 @@ export interface OfferEntity extends defaultClasses.Base {}
   schemaOptions: {
     collection: 'offers',
     timestamps: true,
-  }
+  },
 })
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export class OfferEntity extends defaultClasses.TimeStamps {
   @prop({ trim: true, required: true })
   public title!: string;
 
-  @prop({trim: true})
+  @prop({ trim: true })
   public description!: string;
 
   @prop()
@@ -39,7 +39,7 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   @prop({ required: true })
   public isFavorite: boolean;
 
-  @prop({ required: true , default: RatingLimit.Min })
+  @prop({ required: true, default: RatingLimit.Min })
   public rating: number;
 
   @prop({ required: true, default: 0 })

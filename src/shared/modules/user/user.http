@@ -5,10 +5,10 @@ POST http://localhost:5000/users/register HTTP/1.1
 Content-Type: application/json
 
 {
-  "email": "torans@overlook.com",
-  "avatarUrl": "torrance.png",
-  "name": "Jack Torrance",
-  "password": "shining"
+  "email": "keks@htmlacademy.ru",
+  "name": "keks",
+  "password": "123456",
+  "type": "Pro"
 }
 
 ### Авторизация пользователя
@@ -17,28 +17,29 @@ POST http://localhost:5000/users/login HTTP/1.1
 Content-Type: application/json
 
 {
-  "email": "torans@overlook.net",
-  "password": "shining"
+  "email": "keks@htmlacademy.ru",
+  "password": "123456"
 }
 
 ### Проверка состояния пользователя
 
 GET http://localhost:5000/users/login HTTP/1.1
-Authorization: Bearer dG9yYW5zQG92ZXJsb29rLm5ldDpzaGluaW5n
+Authorization: Bearer a2Vrc0BodG1sYWNhZGVteS5ydToxMjM0NTY=
 
 ### Выход из закрытой части приложения
 
 GET http://localhost:5000/users/logout HTTP/1.1
-Authorization: Bearer dG9yYW5zQG92ZXJsb29rLm5ldDpzaGluaW5n
+Authorization: Bearer ZW1haWwtMUBtYWlsLmNvbToxMjM0NTY
 
 ### Отправить изображение
 
-POST http://localhost:5000/users/65258514a30fc6ef77c0edef/avatar HTTP/1.1
+POST http://localhost:5000/users/671fd8bf064064ad6b45c93b/avatar HTTP/1.1
+Authorization: Bearer a2Vrc0BodG1sYWNhZGVteS5ydToxMjM0NTY=
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
 
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
 Content-Disposition: form-data; name="avatar"; filename="screen.png"
 Content-Type: image/png
 
-< /Users/spider_net/Desktop/screen.png
+< C:\Users\user\Pictures\screen.png
 ------WebKitFormBoundary7MA4YWxkTrZu0gW--

@@ -9,7 +9,7 @@ export const UserNameLimit: Range = {
 
 export const PasswordLimit: Range = {
   Min: 6,
-  Max:12,
+  Max: 12,
 };
 
 export enum UserRoute {

@@ -1,6 +1,12 @@
 import { inject, injectable } from 'inversify';
 import { Response, Request } from 'express';
-import { BaseController, DocumentExistsMiddleware, HttpMethod, ValidateDtoMiddleware, ValidateObjectIdMiddleware } from '#libs/rest/index.js';
+import {
+  BaseController,
+  DocumentExistsMiddleware,
+  HttpMethod,
+  ValidateDtoMiddleware,
+  ValidateObjectIdMiddleware,
+} from '#libs/rest/index.js';
 import { Logger } from '#libs/logger/index.js';
 import { Component } from '#types/index.js';
 import { OfferService } from './offer-service.interface.js';
@@ -18,17 +24,22 @@ export class OfferController extends BaseController {
   constructor(
     @inject(Component.Logger) protected readonly logger: Logger,
     @inject(Component.OfferService) private readonly offerService: OfferService,
-    @inject(Component.CommentService) private readonly commentService: CommentService,
+    @inject(Component.CommentService) private readonly commentService: CommentService
   ) {
     super(logger);
 
     const middlewares = [
       new ValidateObjectIdMiddleware('offerId'),
-      new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')
+      new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
     ];
 
     this.addRoute({ path: OfferRoute.Root, method: HttpMethod.Get, handler: this.getAll });
-    this.addRoute({ path: OfferRoute.Root, method: HttpMethod.Post, handler: this.createOffer, middlewares: [new ValidateDtoMiddleware(CreateOfferDto)] });
+    this.addRoute({
+      path: OfferRoute.Root,
+      method: HttpMethod.Post,
+      handler: this.createOffer,
+      middlewares: [new ValidateDtoMiddleware(CreateOfferDto)],
+    });
     this.addRoute({ path: OfferRoute.OfferId, method: HttpMethod.Get, handler: this.getOffer, middlewares });
     this.addRoute({ path: OfferRoute.OfferId, method: HttpMethod.Patch, handler: this.updateOffer, middlewares });
     this.addRoute({ path: OfferRoute.OfferId, method: HttpMethod.Delete, handler: this.deleteOffer, middlewares });
@@ -56,7 +67,10 @@ export class OfferController extends BaseController {
   }
 
   public async updateOffer(req: Request<ParamOfferId>, res: Response): Promise<void> {
-    const { body: dto, params: { offerId } } = req;
+    const {
+      body: dto,
+      params: { offerId },
+    } = req;
     const offer = await this.offerService.updateById(offerId, dto);
     this.ok(res, fillDto(OfferFullRdo, offer));
   }

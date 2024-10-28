@@ -21,7 +21,7 @@ export class RestApplication {
     @inject(Component.OfferController) private readonly offerController: Controller,
     @inject(Component.UserController) private readonly userController: Controller,
     @inject(Component.PremiumOfferController) private readonly premiumOfferController: Controller,
-    @inject(Component.FavoriteOfferController) private readonly favoriteOfferController: Controller,
+    @inject(Component.FavoriteOfferController) private readonly favoriteOfferController: Controller
   ) {
     this.server = express();
   }
@@ -54,6 +54,7 @@ export class RestApplication {
   private async initMiddleware() {
     this.server.use(express.json());
     this.server.use(AppRoute.Upload, express.static(this.config.get('UPLOAD_DIRECTORY')));
+    this.server.use(AppRoute.Static, express.static(this.config.get('STATIC_DIRECTORY')));
   }
 
   private async initExceptionFilters() {
@@ -65,12 +66,7 @@ export class RestApplication {
       this.logger.info('Application initialization');
       this.logger.info(`Get value from env $PORT: ${this.config.get('PORT')}`);
 
-      await Promise.all([
-        this.initDb(),
-        this.initMiddleware(),
-        this.initControllers(),
-        this.initExceptionFilters(),
-      ]);
+      await Promise.all([this.initDb(), this.initMiddleware(), this.initControllers(), this.initExceptionFilters()]);
 
       await this.initServer();
       this.logger.info(`Server started on http://localhost:${this.config.get('PORT')}`);

@@ -1,4 +1,3 @@
-
 import { UserRdo } from '#shared/modules/user/rdo/user.rdo.js';
 import { OfferRdo } from './offer.rdo.js';
 import { Expose, Type } from 'class-transformer';
@@ -23,8 +22,7 @@ export class OfferFullRdo extends OfferRdo {
   @Expose()
   public Location: Location;
 
-  @Expose({ name: 'userId'})
+  @Expose({ name: 'userId' })
   @Type(() => UserRdo)
   public host: UserRdo;
 }
-

@@ -6,9 +6,7 @@ import { Offer, OfferType, Image, Location, Goods, CityName, UserType } from '#t
 export class TSVFileReader extends EventEmitter implements FileReader {
   private CHUNK_SIZE = 16384;
 
-  constructor(
-    private readonly filename: string
-  ) {
+  constructor(private readonly filename: string) {
     super();
   }
 
@@ -33,14 +31,14 @@ export class TSVFileReader extends EventEmitter implements FileReader {
       avatarUrl,
       userType,
       email,
-      location
+      location,
     ] = line.split('\t');
 
     return {
       title,
       description,
       postDate: new Date(date),
-      city: { name: cityName as CityName, location: this.parseLocation(cityLocation)},
+      city: { name: cityName as CityName, location: this.parseLocation(cityLocation) },
       previewImage,
       images: this.parseImages(images),
       isPremium: this.parseBoolean(isPremium),
@@ -66,7 +64,7 @@ export class TSVFileReader extends EventEmitter implements FileReader {
 
   private parseLocation(location: string): Location {
     const [latitude, longitude] = location.split(',').map((coord) => Number(coord));
-    return {latitude, longitude};
+    return { latitude, longitude };
   }
 
   private parseGoods(goods: string): Goods[] {

@@ -1,5 +1,11 @@
 import { OfferGenerator } from './offer-generator.interface.js';
-import { getRandomBoolean, getRandomDate, getRandomInRange, getRandomItem, getRandomItems } from '#shared/helpers/common.js' ;
+import {
+  getRandomBoolean,
+  getRandomDate,
+  getRandomInRange,
+  getRandomItem,
+  getRandomItems,
+} from '#shared/helpers/common.js';
 import { PriceLimit, RatingLimit, RoomLimit, AdultLimit, OfferConstant } from '#shared/modules/offer/const.js';
 import { OfferType, MockServerData, CityName, UserType } from '#types/index.js';
 import { CitiesLocation } from './const.js';
@@ -50,7 +56,7 @@ export class TSVOfferGenerator implements OfferGenerator {
       avatarUrl,
       userType,
       email,
-      location
+      location,
     ].join('\t');
   }
 }

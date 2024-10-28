@@ -5,4 +5,5 @@ export enum AppRoute {
   Favorite = '/favorites',
   Premium = '/premium',
   Upload = '/upload',
+  Static = '/static',
 }

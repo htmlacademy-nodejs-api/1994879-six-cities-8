@@ -10,35 +10,35 @@ export const OfferConstant = {
 
 export const TitleLimit: Range = {
   Min: 10,
-  Max: 100
+  Max: 100,
 };
 
 export const DescriptionLimit: Range = {
   Min: 20,
-  Max: 1024
+  Max: 1024,
 };
 
 export const PriceLimit: Range = {
   Min: 100,
-  Max: 100000
+  Max: 100000,
 };
 
 export const RoomLimit: Range = {
   Min: 1,
-  Max: 8
+  Max: 8,
 };
 
 export const AdultLimit: Range = {
   Min: 1,
-  Max: 10
+  Max: 10,
 };
 
 export const RatingLimit: Range = {
   Min: 1,
-  Max: 5
+  Max: 5,
 };
 
 export enum OfferRoute {
   Root = '/',
-  OfferId = '/:offerId'
+  OfferId = '/:offerId',
 }

@@ -4,7 +4,7 @@ import { CommentLimit } from '#shared/modules/comment/const.js';
 export const CommentValidation = {
   comment: {
     invalidFormat: 'Comment must be an string',
-    invalidLength: `Comment length must be between ${CommentLimit.Min} and ${CommentLimit.Max}`
+    invalidLength: `Comment length must be between ${CommentLimit.Min} and ${CommentLimit.Max}`,
   },
   date: {
     invalidFormat: 'date must be a valid ISO date',
