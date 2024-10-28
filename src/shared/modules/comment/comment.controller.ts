@@ -20,7 +20,7 @@ export class CommentController extends BaseController {
   constructor(
     @inject(Component.Logger) protected readonly logger: Logger,
     @inject(Component.CommentService) private readonly commentService: CommentService,
-    @inject(Component.OfferService) private readonly offerService: OfferService,
+    @inject(Component.OfferService) private readonly offerService: OfferService
   ) {
     super(logger);
 

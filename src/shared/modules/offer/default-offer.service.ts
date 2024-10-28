@@ -13,7 +13,7 @@ import { UpdateRatingOfferDto } from './dto/update-rating-offer.dto.js';
 export class DefaultOfferService implements OfferService {
   constructor(
     @inject(Component.Logger) private readonly logger: Logger,
-    @inject(Component.OfferModel) private readonly offerModel: types.ModelType<OfferEntity>,
+    @inject(Component.OfferModel) private readonly offerModel: types.ModelType<OfferEntity>
   ) {}
 
   public async create(dto: CreateOfferDto): Promise<DocumentType<OfferEntity>> {
@@ -28,7 +28,7 @@ export class DefaultOfferService implements OfferService {
 
   public async find(
     count: number = OfferConstant.DefaultCount,
-    offset: number = 0,
+    offset: number = 0
   ): Promise<DocumentType<OfferEntity>[]> {
     return this.offerModel.find().skip(offset).limit(count).populate('userId').exec();
   }

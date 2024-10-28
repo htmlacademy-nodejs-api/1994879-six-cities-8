@@ -24,7 +24,7 @@ export class OfferController extends BaseController {
   constructor(
     @inject(Component.Logger) protected readonly logger: Logger,
     @inject(Component.OfferService) private readonly offerService: OfferService,
-    @inject(Component.CommentService) private readonly commentService: CommentService,
+    @inject(Component.CommentService) private readonly commentService: CommentService
   ) {
     super(logger);
 

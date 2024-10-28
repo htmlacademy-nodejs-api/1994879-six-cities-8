@@ -21,7 +21,7 @@ export class RestApplication {
     @inject(Component.OfferController) private readonly offerController: Controller,
     @inject(Component.UserController) private readonly userController: Controller,
     @inject(Component.PremiumOfferController) private readonly premiumOfferController: Controller,
-    @inject(Component.FavoriteOfferController) private readonly favoriteOfferController: Controller,
+    @inject(Component.FavoriteOfferController) private readonly favoriteOfferController: Controller
   ) {
     this.server = express();
   }
@@ -32,7 +32,7 @@ export class RestApplication {
       this.config.get('DB_PASSWORD'),
       this.config.get('DB_HOST'),
       this.config.get('DB_PORT'),
-      this.config.get('DB_NAME'),
+      this.config.get('DB_NAME')
     );
 
     return this.databaseClient.connect(mongoUri);
@@ -54,6 +54,7 @@ export class RestApplication {
   private async initMiddleware() {
     this.server.use(express.json());
     this.server.use(AppRoute.Upload, express.static(this.config.get('UPLOAD_DIRECTORY')));
+    this.server.use(AppRoute.Static, express.static(this.config.get('STATIC_DIRECTORY')));
   }
 
   private async initExceptionFilters() {

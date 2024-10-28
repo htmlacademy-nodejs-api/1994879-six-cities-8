@@ -14,7 +14,7 @@ export class RestConfig implements Config<RestSchema> {
     const parsedOutput = config();
 
     if (parsedOutput.error) {
-      throw new Error("Can't read .env file. Perhaps the file does not exists.");
+      throw new Error('Can\'t read .env file. Perhaps the file does not exists.');
     }
 
     configRestSchema.load({});

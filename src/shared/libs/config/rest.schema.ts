@@ -12,6 +12,7 @@ export type RestSchema = {
   DB_PORT: string;
   DB_NAME: string;
   UPLOAD_DIRECTORY: string;
+  STATIC_DIRECTORY: string;
 };
 
 export const configRestSchema = convict<RestSchema>({
@@ -61,6 +62,12 @@ export const configRestSchema = convict<RestSchema>({
     doc: 'User avatars directory',
     format: String,
     env: 'UPLOAD_DIRECTORY',
+    default: null,
+  },
+  STATIC_DIRECTORY: {
+    doc: 'default files directory (default avatar)',
+    format: String,
+    env: 'STATIC_DIRECTORY',
     default: null,
   },
 });

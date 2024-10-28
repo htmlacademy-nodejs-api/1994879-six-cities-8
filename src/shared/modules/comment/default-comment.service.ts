@@ -10,6 +10,10 @@ import { OfferConstant, RatingLimit } from '../offer/const.js';
 export class DefaultCommentService implements CommentService {
   constructor(@inject(Component.CommentModel) private readonly commentModel: types.ModelType<CommentEntity>) {}
 
+  public async exists(documentId: string): Promise<boolean> {
+    return (await this.commentModel.exists({ _id: documentId })) !== null;
+  }
+
   public async create(dto: CreateCommentDto): Promise<DocumentType<CommentEntity>> {
     const comment = await this.commentModel.create(dto);
     return comment.populate('userId');

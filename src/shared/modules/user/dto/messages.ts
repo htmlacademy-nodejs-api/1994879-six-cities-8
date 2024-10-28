@@ -5,7 +5,7 @@ export const UserValidation = {
     invalidFormat: 'email must be a valid address',
   },
   avatarUrl: {
-    invalidFormat: 'avatarPath is required',
+    invalidFormat: 'avatarUrl is required',
   },
   name: {
     invalidFormat: 'name is required',

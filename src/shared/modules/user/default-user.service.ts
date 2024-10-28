@@ -12,8 +12,12 @@ import { DEFAULT_AVATAR_FILE_NAME } from './const.js';
 export class DefaultUserService implements UserService {
   constructor(
     @inject(Component.Logger) private readonly logger: Logger,
-    @inject(Component.UserModel) private readonly userModel: types.ModelType<UserEntity>,
+    @inject(Component.UserModel) private readonly userModel: types.ModelType<UserEntity>
   ) {}
+
+  public async exists(documentId: string): Promise<boolean> {
+    return (await this.userModel.exists({ _id: documentId })) !== null;
+  }
 
   public async create(dto: CreateUserDto, salt: string): Promise<DocumentType<UserEntity>> {
     const user = new UserEntity({ ...dto, avatarUrl: DEFAULT_AVATAR_FILE_NAME });
