@@ -1,5 +1,9 @@
 import { inject, injectable } from 'inversify';
 import express, { Express } from 'express';
+import swaggerUI from 'swagger-ui-express';
+import YAML from 'yamljs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { Logger } from '#libs/logger/index.js';
 import { Config, RestSchema } from '#libs/config/index.js';
 import { Component } from '#types/index.js';
@@ -8,6 +12,9 @@ import { Controller, ExceptionFilter } from '#libs/rest/index.js';
 import { getMongoURI } from '#shared/helpers/database.js';
 import { AppRoute } from './rest.const.js';
 import { ParseTokenMiddleware } from '#libs/rest/middleware/parse-token.middleware.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 @injectable()
 export class RestApplication {
@@ -67,10 +74,18 @@ export class RestApplication {
     this.server.use(this.appExceptionFilter.catch.bind(this.appExceptionFilter));
   }
 
+  private initSwagger() {
+    const swaggerFilePath = path.resolve(__dirname, '..', '..', 'specification', 'specification.yml');
+    const swaggerDocument = YAML.load(swaggerFilePath);
+    this.server.use(AppRoute.ApiDocs, swaggerUI.serve, swaggerUI.setup(swaggerDocument));
+  }
+
   public async init() {
     try {
       this.logger.info('Application initialization');
       this.logger.info(`Get value from env $PORT: ${this.config.get('PORT')}`);
+
+      this.initSwagger();
 
       await Promise.all([this.initDb(), this.initMiddleware(), this.initControllers(), this.initExceptionFilters()]);
 

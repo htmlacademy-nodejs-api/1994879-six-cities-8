@@ -6,4 +6,5 @@ export enum AppRoute {
   Premium = '/premium',
   Upload = '/upload',
   Static = '/static',
+  ApiDocs = '/api-docs',
 }
