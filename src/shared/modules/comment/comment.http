@@ -8,6 +8,7 @@ Content-Type: application/json
 
 POST http://localhost:5000/offers/670818bfd219a73048d326d3/comments HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjY3MWZkOGJmMDY0MDY0YWQ2YjQ1YzkzYiIsImVtYWlsIjoia2Vrc0BodG1sYWNhZGVteS5ydSIsIm5hbWUiOiJrZWtzIiwiaWF0IjoxNzMwMTk2NjQ3LCJleHAiOjE3MzAzNjk0NDd9.Xwq6Tekerlp0qBIxfEjtENhC5zlLf7AnhvLgM8eT00w
 
 {
   "comment": "Это новый комментарий",

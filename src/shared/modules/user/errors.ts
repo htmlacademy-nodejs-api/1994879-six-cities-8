@@ -3,8 +3,8 @@ import { StatusCodes } from 'http-status-codes';
 import { Component } from '#types/component.enum.js';
 
 export class UserAlreadyExistsError extends HttpError {
-  constructor(message: string) {
-    super(StatusCodes.CONFLICT, message, Component.UserController.description);
+  constructor(email: string) {
+    super(StatusCodes.CONFLICT, `User already exists, <${email}>`, Component.UserController.description);
   }
 }
 
