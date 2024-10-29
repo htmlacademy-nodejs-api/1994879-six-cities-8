@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
 import { DocumentType, types } from '@typegoose/typegoose';
 import { OfferService } from './offer-service.interface.js';
-import { Component, SortType } from '#types/index.js';
+import { CityName, Component, SortType } from '#types/index.js';
 import { Logger } from '#libs/logger/index.js';
 import { OfferEntity } from './offer.entity.js';
 import { CreateOfferDto } from './dto/create-offer.dto.js';
@@ -55,7 +55,7 @@ export class DefaultOfferService implements OfferService {
     return this.offerModel.findByIdAndUpdate(offerId, update, { new: true }).exec();
   }
 
-  public async findByPremium(cityName: string): Promise<DocumentType<OfferEntity>[]> {
+  public async findByPremium(cityName: CityName): Promise<DocumentType<OfferEntity>[]> {
     const filter = {
       'city.name': cityName,
       isPremium: true,
