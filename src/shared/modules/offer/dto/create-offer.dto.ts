@@ -70,6 +70,5 @@ export class CreateOfferDto {
   @ValidateNested({ message: OfferValidation.location.invalid })
   public location: Location;
 
-  @IsString({ message: OfferValidation.userId.invalid })
   public userId: string;
 }

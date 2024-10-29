@@ -4,6 +4,7 @@ import {
   BaseController,
   DocumentExistsMiddleware,
   HttpMethod,
+  PrivateRouteMiddleware,
   ValidateDtoMiddleware,
   ValidateObjectIdMiddleware,
 } from '#libs/rest/index.js';
@@ -14,6 +15,7 @@ import { CommentRoute } from './const.js';
 import { fillDto } from '#shared/helpers/common.js';
 import { CommentRdo } from './rdo/comment.rdo.js';
 import { OfferService } from '../offer/offer-service.interface.js';
+import { CreateCommentRequest } from './types/create-offer-request.type.js';
 
 @injectable()
 export class CommentController extends BaseController {
@@ -37,7 +39,7 @@ export class CommentController extends BaseController {
       path: CommentRoute.OfferId,
       method: HttpMethod.Post,
       handler: this.createComment,
-      middlewares: [new ValidateDtoMiddleware(CreateCommentDto)],
+      middlewares: [new PrivateRouteMiddleware(), new ValidateDtoMiddleware(CreateCommentDto)],
     });
   }
 
@@ -46,9 +48,9 @@ export class CommentController extends BaseController {
     this.ok(res, fillDto(CommentRdo, comments));
   }
 
-  public async createComment(req: Request, res: Response): Promise<void> {
-    const { offerId } = req.params;
-    const comment = await this.commentService.create({ ...req.body, offerId: offerId });
+  public async createComment({ params, body, tokenPayload }: CreateCommentRequest, res: Response): Promise<void> {
+    const { offerId } = params;
+    const comment = await this.commentService.create({ ...body, offerId: offerId, userId: tokenPayload.id });
     const [rating, commentsCount] = await this.commentService.calculateRatingAndCommentsCount(offerId);
     await this.offerService.updateRatingById(offerId, { rating, commentsCount });
     this.created(res, fillDto(CommentRdo, comment));

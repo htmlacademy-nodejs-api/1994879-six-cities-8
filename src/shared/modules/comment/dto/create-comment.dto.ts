@@ -1,4 +1,4 @@
-import { IsNumber, IsString, Length, Max, Min } from 'class-validator';
+import { IsMongoId, IsNumber, IsString, Length, Max, Min } from 'class-validator';
 import { CommentLimit } from '../const.js';
 import { RatingLimit } from '#shared/modules/offer/const.js';
 import { CommentValidation } from './messages.js';
@@ -13,9 +13,8 @@ export class CreateCommentDto {
   @Max(RatingLimit.Max, { message: CommentValidation.rating.invalidValue })
   public rating: number;
 
-  @IsString({ message: CommentValidation.offerId.invalid })
+  @IsMongoId({ message: CommentValidation.offerId.invalid })
   public offerId: string;
 
-  @IsString({ message: CommentValidation.userId.invalid })
   public userId: string;
 }

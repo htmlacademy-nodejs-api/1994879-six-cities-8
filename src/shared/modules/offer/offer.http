@@ -10,7 +10,7 @@ Content-Type: application/json
 ## Получить список избранных предложений
 GET http://localhost:5000/favorites HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuc0BvdmVybG9vay5uZXQiLCJuYW1lIjoiSmFjayIsImlkIjoiNjY2YzI0YTE1OTY3YWUwNDk2ODRjMTM5IiwiaWF0IjoxNzE4MzcwNTU3LCJleHAiOjE3MTg1NDMzNTd9.Sa2djeI_8HOpqpxxhC4IvI6U6VatIn7qCTSIptTVYXU
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjY3MWZkOGJmMDY0MDY0YWQ2YjQ1YzkzYiIsImVtYWlsIjoia2Vrc0BodG1sYWNhZGVteS5ydSIsIm5hbWUiOiJrZWtzIiwiaWF0IjoxNzMwMTk2NjQ3LCJleHAiOjE3MzAzNjk0NDd9.Xwq6Tekerlp0qBIxfEjtENhC5zlLf7AnhvLgM8eT00w
 
 ###
 
@@ -29,6 +29,7 @@ Content-Type: application/json
 ## Добавить новое предложение
 POST http://127.0.0.1:5000/offers HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjY3MWZkOGJmMDY0MDY0YWQ2YjQ1YzkzYiIsImVtYWlsIjoia2Vrc0BodG1sYWNhZGVteS5ydSIsIm5hbWUiOiJrZWtzIiwiaWF0IjoxNzMwMTk2NjQ3LCJleHAiOjE3MzAzNjk0NDd9.Xwq6Tekerlp0qBIxfEjtENhC5zlLf7AnhvLgM8eT00w
 
 {
   "title": "Beautiful & luxurious studio at great location",
@@ -61,13 +62,14 @@ Content-Type: application/json
 ## Удалить предложение по id
 DELETE http://127.0.0.1:5000/offers/67079a72ef85a97271763ea4 HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuc0BvdmVybG9vay5uZXQiLCJuYW1lIjoiSmFjayIsImlkIjoiNjY2YzI0YTE1OTY3YWUwNDk2ODRjMTM5IiwiaWF0IjoxNzE4MzcwNTU3LCJleHAiOjE3MTg1NDMzNTd9.Sa2djeI_8HOpqpxxhC4IvI6U6VatIn7qCTSIptTVYXU
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjY3MWZkOGJmMDY0MDY0YWQ2YjQ1YzkzYiIsImVtYWlsIjoia2Vrc0BodG1sYWNhZGVteS5ydSIsIm5hbWUiOiJrZWtzIiwiaWF0IjoxNzMwMTk2NjQ3LCJleHAiOjE3MzAzNjk0NDd9.Xwq6Tekerlp0qBIxfEjtENhC5zlLf7AnhvLgM8eT00w
+
 ###
 
 ## Редактировать предложение
 PATCH http://127.0.0.1:5000/offers/67079ad7ef85a97271763eaf HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuc0BvdmVybG9vay5uZXQiLCJuYW1lIjoiSmFjayIsImlkIjoiNjY2YzI0YTE1OTY3YWUwNDk2ODRjMTM5IiwiaWF0IjoxNzE4MzcwNTU3LCJleHAiOjE3MTg1NDMzNTd9.Sa2djeI_8HOpqpxxhC4IvI6U6VatIn7qCTSIptTVYXU
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjY3MWZkOGJmMDY0MDY0YWQ2YjQ1YzkzYiIsImVtYWlsIjoia2Vrc0BodG1sYWNhZGVteS5ydSIsIm5hbWUiOiJrZWtzIiwiaWF0IjoxNzMwMTk2NjQ3LCJleHAiOjE3MzAzNjk0NDd9.Xwq6Tekerlp0qBIxfEjtENhC5zlLf7AnhvLgM8eT00w
 
 {
   "title": "-= New offer =-"

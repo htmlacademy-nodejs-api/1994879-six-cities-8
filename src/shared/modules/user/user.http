@@ -24,17 +24,17 @@ Content-Type: application/json
 ### Проверка состояния пользователя
 
 GET http://localhost:5000/users/login HTTP/1.1
-Authorization: Bearer a2Vrc0BodG1sYWNhZGVteS5ydToxMjM0NTY=
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjY3MWZkOGJmMDY0MDY0YWQ2YjQ1YzkzYiIsImVtYWlsIjoia2Vrc0BodG1sYWNhZGVteS5ydSIsIm5hbWUiOiJrZWtzIiwiaWF0IjoxNzMwMTk2NjQ3LCJleHAiOjE3MzAzNjk0NDd9.Xwq6Tekerlp0qBIxfEjtENhC5zlLf7AnhvLgM8eT00w
 
 ### Выход из закрытой части приложения
 
 GET http://localhost:5000/users/logout HTTP/1.1
-Authorization: Bearer ZW1haWwtMUBtYWlsLmNvbToxMjM0NTY
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjY3MWZkOGJmMDY0MDY0YWQ2YjQ1YzkzYiIsImVtYWlsIjoia2Vrc0BodG1sYWNhZGVteS5ydSIsIm5hbWUiOiJrZWtzIiwiaWF0IjoxNzMwMTk2NjQ3LCJleHAiOjE3MzAzNjk0NDd9.Xwq6Tekerlp0qBIxfEjtENhC5zlLf7AnhvLgM8eT00w
 
 ### Отправить изображение
 
 POST http://localhost:5000/users/671fd8bf064064ad6b45c93b/avatar HTTP/1.1
-Authorization: Bearer a2Vrc0BodG1sYWNhZGVteS5ydToxMjM0NTY=
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjY3MWZkOGJmMDY0MDY0YWQ2YjQ1YzkzYiIsImVtYWlsIjoia2Vrc0BodG1sYWNhZGVteS5ydSIsIm5hbWUiOiJrZWtzIiwiaWF0IjoxNzMwMTk2NjQ3LCJleHAiOjE3MzAzNjk0NDd9.Xwq6Tekerlp0qBIxfEjtENhC5zlLf7AnhvLgM8eT00w
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
 
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
