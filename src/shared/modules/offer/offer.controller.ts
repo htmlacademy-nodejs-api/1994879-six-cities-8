@@ -21,7 +21,8 @@ import { CreateOfferDto } from './dto/create-offer.dto.js';
 import { OfferRequest } from './types/offer-request.type.js';
 import { CreateOfferRequest } from './types/create-offer-request.type.js';
 import { UpdateOfferRequest } from './types/update-offer-request.type.js';
-import { OfferOwnerError } from './errors.js';
+import { OfferAccessError } from './errors.js';
+import { Types } from 'mongoose';
 
 @injectable()
 export class OfferController extends BaseController {
@@ -60,31 +61,30 @@ export class OfferController extends BaseController {
     });
   }
 
-  public async getAll(req: Request, res: Response): Promise<void> {
-    const offers = await this.offerService.find(Number(req.query.count), Number(req.query.offset));
+  public async getAll({ query, tokenPayload }: Request, res: Response): Promise<void> {
+    const offers = await this.offerService.find(Number(query.count), Number(query.offset), tokenPayload?.id);
     this.ok(res, fillDto(OfferFullRdo, offers));
   }
 
-  public async getOffer(req: OfferRequest, res: Response): Promise<void> {
-    const { offerId } = req.params;
-    const offer = await this.offerService.findById(offerId);
+  public async getOffer({ params: { offerId }, tokenPayload }: OfferRequest, res: Response): Promise<void> {
+    const offer = await this.offerService.findById(offerId, tokenPayload.id);
     if (!offer) {
       throw new NotFoundOfferError();
     }
     this.ok(res, fillDto(OfferFullRdo, offer));
   }
 
-  public async createOffer({ body }: CreateOfferRequest, res: Response): Promise<void> {
-    const newOffer = await this.offerService.create(body);
-    const offer = await this.offerService.findById(newOffer.id);
+  public async createOffer({ body, tokenPayload: { id: userId } }: CreateOfferRequest, res: Response): Promise<void> {
+    const newOffer = await this.offerService.create({ ...body, userId });
+    const offer = await this.offerService.findById(newOffer.id, userId);
     this.created(res, fillDto(OfferFullRdo, offer));
   }
 
-  private async checkOfferOwner(offerId: string, userId: string): Promise<void> {
-    const offer = await this.offerService.findById(offerId);
+  private async checkAccess(offerId: string, userId: string): Promise<void> {
+    const offer = await this.offerService.findById(offerId, userId);
 
-    if (offer?.userId.id !== userId) {
-      throw new OfferOwnerError(offerId);
+    if (!offer?.userId._id.equals(new Types.ObjectId(userId))) {
+      throw new OfferAccessError(offerId);
     }
   }
 
@@ -92,14 +92,14 @@ export class OfferController extends BaseController {
     { params: { offerId }, body, tokenPayload }: UpdateOfferRequest,
     res: Response
   ): Promise<void> {
-    await this.checkOfferOwner(offerId, tokenPayload.id);
+    await this.checkAccess(offerId, tokenPayload.id);
 
     const updatedOffer = await this.offerService.updateById(offerId, body);
     this.ok(res, fillDto(OfferFullRdo, updatedOffer));
   }
 
   public async deleteOffer({ params: { offerId }, tokenPayload }: OfferRequest, res: Response): Promise<void> {
-    await this.checkOfferOwner(offerId, tokenPayload.id);
+    await this.checkAccess(offerId, tokenPayload.id);
 
     const offer = await this.offerService.deleteById(offerId);
     await this.commentService.deleteByOfferId(offerId);

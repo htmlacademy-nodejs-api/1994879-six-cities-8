@@ -8,12 +8,15 @@ import { CreateOfferDto } from './dto/create-offer.dto.js';
 import { OfferConstant } from './const.js';
 import { UpdateOfferDto } from './dto/update-offer.dto.js';
 import { UpdateRatingOfferDto } from './dto/update-rating-offer.dto.js';
+import { Types } from 'mongoose';
+import { UserEntity } from '../user/user.entity.js';
 
 @injectable()
 export class DefaultOfferService implements OfferService {
   constructor(
     @inject(Component.Logger) private readonly logger: Logger,
-    @inject(Component.OfferModel) private readonly offerModel: types.ModelType<OfferEntity>
+    @inject(Component.OfferModel) private readonly offerModel: types.ModelType<OfferEntity>,
+    @inject(Component.UserModel) private readonly userModel: types.ModelType<UserEntity>
   ) {}
 
   public async create(dto: CreateOfferDto): Promise<DocumentType<OfferEntity>> {
@@ -22,15 +25,37 @@ export class DefaultOfferService implements OfferService {
     return result;
   }
 
-  public async findById(offerId: string): Promise<DocumentType<OfferEntity> | null> {
-    return this.offerModel.findById(offerId).populate('userId').exec();
+  public async findById(offerId: string, userId: string): Promise<DocumentType<OfferEntity> | null> {
+    const offer = await this.offerModel.findById(offerId).populate('userId').exec();
+
+    if (!offer) {
+      return null;
+    }
+
+    const user = await this.userModel.findById(userId).exec();
+    if (user && user.favorites) {
+      offer.isFavorite = user.favorites.includes(new Types.ObjectId(offerId));
+    } else {
+      offer.isFavorite = false;
+    }
+    return offer;
   }
 
   public async find(
     count: number = OfferConstant.DefaultCount,
-    offset: number = 0
+    offset: number = 0,
+    userId: string
   ): Promise<DocumentType<OfferEntity>[]> {
-    return this.offerModel.find().skip(offset).limit(count).populate('userId').exec();
+    const offers = await this.offerModel.find().skip(offset).limit(count).populate('userId').exec();
+
+    const user = await this.userModel.findById(userId).exec();
+
+    offers.forEach((offer) => ({
+      ...offer,
+      isFavorite: user ? user.favorites.includes(offer.id) : false,
+    }));
+
+    return offers;
   }
 
   public async deleteById(offerId: string): Promise<DocumentType<OfferEntity> | null> {
@@ -60,7 +85,7 @@ export class DefaultOfferService implements OfferService {
       'city.name': cityName,
       isPremium: true,
     };
-    return await this.offerModel
+    return this.offerModel
       .find(filter)
       .sort({ createdAt: SortType.Down })
       .limit(OfferConstant.PremiumCount)
@@ -68,15 +93,34 @@ export class DefaultOfferService implements OfferService {
       .exec();
   }
 
-  public async findByFavorite(): Promise<DocumentType<OfferEntity>[]> {
-    return await this.offerModel
-      .find({
-        isFavorite: true,
-      })
-      .exec();
+  public async findByFavorite(userId: string): Promise<DocumentType<OfferEntity>[] | null> {
+    const user = await this.userModel.findById(userId).exec();
+    if (!user) {
+      return null;
+    }
+
+    return this.offerModel.find({ _id: { $in: user.favorites } });
   }
 
-  public async addOrRemoveFavorite(offerId: string, dto: UpdateOfferDto): Promise<DocumentType<OfferEntity> | null> {
-    return await this.offerModel.findByIdAndUpdate(offerId, dto, { new: true }).exec();
+  public async toggleFavorite(
+    userId: string,
+    offerId: string,
+    isFavorite: boolean
+  ): Promise<DocumentType<OfferEntity> | null> {
+    const user = await this.userModel.findById(userId).exec();
+    if (!user) {
+      return null;
+    }
+
+    const offerObjectId = new Types.ObjectId(offerId);
+
+    if (isFavorite) {
+      user.favorites.push(offerObjectId);
+    } else {
+      user.favorites.pull(offerObjectId);
+    }
+
+    await user.save();
+    return this.findById(offerId, userId);
   }
 }

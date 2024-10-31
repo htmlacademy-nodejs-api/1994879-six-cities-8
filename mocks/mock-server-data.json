@@ -29,18 +29,19 @@
       "Dusseldorf"
     ],
     "previewImages": [
-      "apartment.jpg",
-      "house.jpg",
-      "hotel.jpg",
+      "apartment-01.jpg",
+      "apartment-02.jpg",
+      "apartment-03.jpg",
+      "studio-01.jpg",
       "room.jpg"
     ],
     "images": [
-      "image-1.jpg",
-      "image-2.jpg",
-      "image-3.jpg",
-      "image-4.jpg",
-      "image-5.jpg",
-      "image-6.jpg"
+      "apartment-small-03.jpg",
+      "apartment-small-04.jpg",
+      "room-small.jpg",
+      "apartment-small-03.jpg",
+      "apartment-small-04.jpg",
+      "room-small.jpg"
     ],
     "offerTypes": [
       "apartment", "house", "room", "hotel"
@@ -65,14 +66,9 @@
       "email-111111@mail.com"
     ],
     "avatars": [
-      "user-1.jpg",
-      "user-2.jpg",
-      "user-3.jpg"
-    ],
-    "tokens": [
-      "tokens-1",
-      "tokens-2",
-      "tokens-3"
+      "avatar-max.jpg",
+      "avatar-angelina.jpg",
+      "default-avatar.svg"
     ]
   }
 }

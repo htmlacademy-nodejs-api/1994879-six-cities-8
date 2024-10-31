@@ -20,6 +20,7 @@ import { CreateUserDto } from './dto/create-user.dto.js';
 import { LoginUserDto } from './dto/login-user.dto.js';
 import { AuthService } from '#shared/modules/auth/auth-service.interface.js';
 import { LoggedUserRdo } from './rdo/logged-user.rdo.js';
+import { UploadUserAvatarRdo } from './rdo/upload-user-avatar.rdo.js';
 
 @injectable()
 export class UserController extends BaseController {
@@ -96,6 +97,6 @@ export class UserController extends BaseController {
   public async uploadAvatar({ tokenPayload: { id: userId }, file }: Request, res: Response) {
     const uploadFile = { avatarUrl: file?.filename };
     await this.userService.updateById(userId, uploadFile);
-    this.created(res, { filepath: uploadFile.avatarUrl });
+    this.created(res, fillDto(UploadUserAvatarRdo, { avatarUrl: uploadFile.avatarUrl }));
   }
 }

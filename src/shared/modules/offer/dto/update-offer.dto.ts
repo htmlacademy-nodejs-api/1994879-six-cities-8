@@ -49,10 +49,6 @@ export class UpdateOfferDto {
   public isPremium?: boolean;
 
   @IsOptional()
-  @IsBooleanString({ message: OfferValidation.isFavorite.invalidFormat })
-  public isFavorite?: boolean;
-
-  @IsOptional()
   @IsEnum(OfferType, { message: OfferValidation.type.invalid })
   public type?: OfferType;
 

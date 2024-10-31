@@ -18,7 +18,7 @@ export class PremiumOfferController extends BaseController {
   ) {
     super(logger);
 
-    this.addRoute({ path: OfferRoute.Root, method: HttpMethod.Get, handler: this.getPremium });
+    this.addRoute({ path: OfferRoute.Premium, method: HttpMethod.Get, handler: this.getPremium });
   }
 
   public async getPremium({ query }: PremiumOfferRequest, res: Response): Promise<void> {

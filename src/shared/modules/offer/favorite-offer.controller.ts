@@ -30,7 +30,7 @@ export class FavoriteOfferController extends BaseController {
     ];
 
     this.addRoute({
-      path: OfferRoute.Root,
+      path: OfferRoute.Favorites,
       method: HttpMethod.Get,
       handler: this.getFavorites,
       middlewares: [new PrivateRouteMiddleware()],
@@ -39,18 +39,25 @@ export class FavoriteOfferController extends BaseController {
     this.addRoute({ path: OfferRoute.Favorite, method: HttpMethod.Delete, handler: this.deleteFavorite, middlewares });
   }
 
-  public async getFavorites(_req: Request, res: Response): Promise<void> {
-    const offers = await this.offerService.findByFavorite();
+  public async getFavorites({ tokenPayload }: Request, res: Response): Promise<void> {
+    const offers = await this.offerService.findByFavorite(tokenPayload.id);
     this.ok(res, fillDto(OfferRdo, offers));
   }
 
-  public async addFavorite({ params: { offerId } }: OfferRequest, res: Response): Promise<void> {
-    const offers = await this.offerService.addOrRemoveFavorite(offerId, { isFavorite: true });
-    this.ok(res, fillDto(OfferRdo, offers));
+  private async toggleFavorite(
+    { params: { offerId }, tokenPayload }: OfferRequest,
+    isFavorite: boolean,
+    res: Response
+  ): Promise<void> {
+    const offer = await this.offerService.toggleFavorite(tokenPayload.id, offerId, isFavorite);
+    this.ok(res, fillDto(OfferRdo, offer));
   }
 
-  public async deleteFavorite({ params: { offerId } }: OfferRequest, res: Response): Promise<void> {
-    const offers = await this.offerService.addOrRemoveFavorite(offerId, { isFavorite: true });
-    this.ok(res, fillDto(OfferRdo, offers));
+  public async addFavorite(req: OfferRequest, res: Response): Promise<void> {
+    await this.toggleFavorite(req, true, res);
+  }
+
+  public async deleteFavorite(req: OfferRequest, res: Response): Promise<void> {
+    await this.toggleFavorite(req, false, res);
   }
 }

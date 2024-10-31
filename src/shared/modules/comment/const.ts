@@ -6,5 +6,5 @@ export const CommentLimit: Range = {
 };
 
 export enum CommentRoute {
-  OfferId = '/:offerId/comments',
+  OfferId = '/offer/:offerId',
 }
