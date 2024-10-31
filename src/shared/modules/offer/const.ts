@@ -41,4 +41,7 @@ export const RatingLimit: Range = {
 export enum OfferRoute {
   Root = '/',
   OfferId = '/:offerId',
+  Favorite = '/:offerId/favorite',
+  Favorites = '/favorites',
+  Premium = '/premium',
 }

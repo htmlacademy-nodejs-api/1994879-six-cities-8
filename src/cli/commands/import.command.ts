@@ -23,7 +23,7 @@ export class ImportCommand implements Command {
 
     this.logger = new ConsoleLogger();
     this.userService = new DefaultUserService(this.logger, UserModel);
-    this.offerService = new DefaultOfferService(this.logger, OfferModel);
+    this.offerService = new DefaultOfferService(this.logger, OfferModel, UserModel);
     this.databaseClient = new MongoDatabaseClient(this.logger);
   }
 
@@ -42,7 +42,7 @@ export class ImportCommand implements Command {
         ...offer.host,
         password: DEFAULT_USER_PASSWORD,
       },
-      this.salt,
+      this.salt
     );
 
     await this.offerService.create({
@@ -52,7 +52,6 @@ export class ImportCommand implements Command {
       previewImage: offer.previewImage,
       images: offer.images,
       isPremium: offer.isPremium,
-      isFavorite: offer.isFavorite,
       type: offer.type,
       bedrooms: offer.bedrooms,
       maxAdults: offer.maxAdults,
@@ -74,7 +73,7 @@ export class ImportCommand implements Command {
     password: string,
     host: string,
     dbname: string,
-    salt: string,
+    salt: string
   ): Promise<void> {
     const uri = getMongoURI(login, password, host, DEFAULT_DB_PORT, dbname);
     this.salt = salt;

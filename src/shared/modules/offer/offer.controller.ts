@@ -20,6 +20,9 @@ import { NotFoundOfferError } from './offer.error.js';
 import { CreateOfferDto } from './dto/create-offer.dto.js';
 import { OfferRequest } from './types/offer-request.type.js';
 import { CreateOfferRequest } from './types/create-offer-request.type.js';
+import { UpdateOfferRequest } from './types/update-offer-request.type.js';
+import { OfferAccessError } from './errors.js';
+import { Types } from 'mongoose';
 
 @injectable()
 export class OfferController extends BaseController {
@@ -34,6 +37,7 @@ export class OfferController extends BaseController {
       new ValidateObjectIdMiddleware('offerId'),
       new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
     ];
+    const privateMiddlewares = [new PrivateRouteMiddleware(), ...middlewares];
 
     this.addRoute({ path: OfferRoute.Root, method: HttpMethod.Get, handler: this.getAll });
     this.addRoute({
@@ -47,48 +51,56 @@ export class OfferController extends BaseController {
       path: OfferRoute.OfferId,
       method: HttpMethod.Patch,
       handler: this.updateOffer,
-      middlewares: [...middlewares, new PrivateRouteMiddleware()],
+      middlewares: privateMiddlewares,
     });
     this.addRoute({
       path: OfferRoute.OfferId,
       method: HttpMethod.Delete,
       handler: this.deleteOffer,
-      middlewares: [...middlewares, new PrivateRouteMiddleware()],
+      middlewares: privateMiddlewares,
     });
   }
 
-  public async getAll(req: Request, res: Response): Promise<void> {
-    const offers = await this.offerService.find(Number(req.query.count), Number(req.query.offset));
+  public async getAll({ query, tokenPayload }: Request, res: Response): Promise<void> {
+    const offers = await this.offerService.find(Number(query.count), Number(query.offset), tokenPayload?.id);
     this.ok(res, fillDto(OfferFullRdo, offers));
   }
 
-  public async getOffer(req: OfferRequest, res: Response): Promise<void> {
-    const { offerId } = req.params;
-    const offer = await this.offerService.findById(offerId);
+  public async getOffer({ params: { offerId }, tokenPayload }: OfferRequest, res: Response): Promise<void> {
+    const offer = await this.offerService.findById(offerId, tokenPayload.id);
     if (!offer) {
       throw new NotFoundOfferError();
     }
     this.ok(res, fillDto(OfferFullRdo, offer));
   }
 
-  public async createOffer(req: CreateOfferRequest, res: Response): Promise<void> {
-    const { body: dto } = req;
-    const newOffer = await this.offerService.create(dto);
-    const offer = await this.offerService.findById(newOffer.id);
+  public async createOffer({ body, tokenPayload: { id: userId } }: CreateOfferRequest, res: Response): Promise<void> {
+    const newOffer = await this.offerService.create({ ...body, userId });
+    const offer = await this.offerService.findById(newOffer.id, userId);
     this.created(res, fillDto(OfferFullRdo, offer));
   }
 
-  public async updateOffer(req: OfferRequest, res: Response): Promise<void> {
-    const {
-      body: dto,
-      params: { offerId },
-    } = req;
-    const offer = await this.offerService.updateById(offerId, dto);
-    this.ok(res, fillDto(OfferFullRdo, offer));
+  private async checkAccess(offerId: string, userId: string): Promise<void> {
+    const offer = await this.offerService.findById(offerId, userId);
+
+    if (!offer?.userId._id.equals(new Types.ObjectId(userId))) {
+      throw new OfferAccessError(offerId);
+    }
   }
 
-  public async deleteOffer(req: OfferRequest, res: Response): Promise<void> {
-    const { offerId } = req.params;
+  public async updateOffer(
+    { params: { offerId }, body, tokenPayload }: UpdateOfferRequest,
+    res: Response
+  ): Promise<void> {
+    await this.checkAccess(offerId, tokenPayload.id);
+
+    const updatedOffer = await this.offerService.updateById(offerId, body);
+    this.ok(res, fillDto(OfferFullRdo, updatedOffer));
+  }
+
+  public async deleteOffer({ params: { offerId }, tokenPayload }: OfferRequest, res: Response): Promise<void> {
+    await this.checkAccess(offerId, tokenPayload.id);
+
     const offer = await this.offerService.deleteById(offerId);
     await this.commentService.deleteByOfferId(offerId);
     this.noContent(res, fillDto(OfferRdo, offer));

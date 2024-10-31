@@ -1,13 +1,22 @@
 import { inject, injectable } from 'inversify';
 import express, { Express } from 'express';
+import swaggerUI from 'swagger-ui-express';
+import YAML from 'yamljs';
+import path from 'node:path';
+import cors from 'cors';
+import { fileURLToPath } from 'node:url';
 import { Logger } from '#libs/logger/index.js';
 import { Config, RestSchema } from '#libs/config/index.js';
 import { Component } from '#types/index.js';
 import { DatabaseClient } from '#libs/database-client/index.js';
 import { Controller, ExceptionFilter } from '#libs/rest/index.js';
 import { getMongoURI } from '#shared/helpers/database.js';
-import { AppRoute } from './rest.const.js';
+import { AppRoute, StaticRoute } from './rest.const.js';
 import { ParseTokenMiddleware } from '#libs/rest/middleware/parse-token.middleware.js';
+import { getFullServerPath } from '#shared/helpers/common.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 @injectable()
 export class RestApplication {
@@ -23,7 +32,9 @@ export class RestApplication {
     @inject(Component.OfferController) private readonly offerController: Controller,
     @inject(Component.UserController) private readonly userController: Controller,
     @inject(Component.PremiumOfferController) private readonly premiumOfferController: Controller,
-    @inject(Component.FavoriteOfferController) private readonly favoriteOfferController: Controller
+    @inject(Component.FavoriteOfferController) private readonly favoriteOfferController: Controller,
+    @inject(Component.HttpExceptionFilter) private readonly httpExceptionFilter: ExceptionFilter,
+    @inject(Component.ValidationExceptionFilter) private readonly validationExceptionFilter: ExceptionFilter
   ) {
     this.server = express();
   }
@@ -46,25 +57,34 @@ export class RestApplication {
   }
 
   private async initControllers() {
-    this.server.use(AppRoute.Offer, this.commentController.router);
-    this.server.use(AppRoute.Offer, this.offerController.router);
     this.server.use(AppRoute.User, this.userController.router);
-    this.server.use(AppRoute.Premium, this.premiumOfferController.router);
-    this.server.use(AppRoute.Favorite, this.favoriteOfferController.router);
+    this.server.use(AppRoute.Comment, this.commentController.router);
+    this.server.use(AppRoute.Offer, this.premiumOfferController.router);
+    this.server.use(AppRoute.Offer, this.favoriteOfferController.router);
+    this.server.use(AppRoute.Offer, this.offerController.router);
   }
 
   private async initMiddleware() {
     this.server.use(express.json());
-    this.server.use(AppRoute.Upload, express.static(this.config.get('UPLOAD_DIRECTORY')));
-    this.server.use(AppRoute.Static, express.static(this.config.get('STATIC_DIRECTORY')));
+    this.server.use(StaticRoute.Upload, express.static(this.config.get('UPLOAD_DIRECTORY')));
+    this.server.use(StaticRoute.Files, express.static(this.config.get('STATIC_DIRECTORY')));
 
     const authenticateMiddleware = new ParseTokenMiddleware(this.config.get('JWT_SECRET'));
     this.server.use(authenticateMiddleware.execute.bind(authenticateMiddleware));
+    this.server.use(cors());
   }
 
   private async initExceptionFilters() {
     this.server.use(this.authExceptionFilter.catch.bind(this.authExceptionFilter));
+    this.server.use(this.validationExceptionFilter.catch.bind(this.validationExceptionFilter));
+    this.server.use(this.httpExceptionFilter.catch.bind(this.httpExceptionFilter));
     this.server.use(this.appExceptionFilter.catch.bind(this.appExceptionFilter));
+  }
+
+  private initSwagger() {
+    const swaggerFilePath = path.resolve(__dirname, '..', '..', 'specification', 'specification.yml');
+    const swaggerDocument = YAML.load(swaggerFilePath);
+    this.server.use(StaticRoute.ApiDocs, swaggerUI.serve, swaggerUI.setup(swaggerDocument));
   }
 
   public async init() {
@@ -72,10 +92,12 @@ export class RestApplication {
       this.logger.info('Application initialization');
       this.logger.info(`Get value from env $PORT: ${this.config.get('PORT')}`);
 
+      this.initSwagger();
+
       await Promise.all([this.initDb(), this.initMiddleware(), this.initControllers(), this.initExceptionFilters()]);
 
       await this.initServer();
-      this.logger.info(`Server started on http://localhost:${this.config.get('PORT')}`);
+      this.logger.info(`Server started on ${getFullServerPath(this.config.get('HOST'), this.config.get('PORT'))}`);
     } catch (error) {
       this.logger.error('Error during application initialization', error as Error);
     }

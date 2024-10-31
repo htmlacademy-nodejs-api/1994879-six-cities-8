@@ -5,10 +5,10 @@ POST http://localhost:5000/users/register HTTP/1.1
 Content-Type: application/json
 
 {
-  "email": "keks@htmlacademy.ru",
-  "name": "keks",
+  "email": "bob@htmlacademy.com",
+  "name": "bob",
   "password": "123456",
-  "type": "Pro"
+  "type": "regular"
 }
 
 ### Авторизация пользователя
@@ -17,7 +17,7 @@ POST http://localhost:5000/users/login HTTP/1.1
 Content-Type: application/json
 
 {
-  "email": "keks@htmlacademy.ru",
+  "email": "bob@htmlacademy.com",
   "password": "123456"
 }
 

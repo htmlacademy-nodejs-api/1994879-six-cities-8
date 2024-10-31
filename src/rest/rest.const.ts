@@ -1,9 +1,11 @@
 export enum AppRoute {
   Offer = '/offers',
   User = '/users',
-  Comment = '/comment',
-  Favorite = '/favorites',
-  Premium = '/premium',
+  Comment = '/comments',
+}
+
+export enum StaticRoute {
   Upload = '/upload',
-  Static = '/static',
+  Files = '/static',
+  ApiDocs = '/api-docs',
 }
