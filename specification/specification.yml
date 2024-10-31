@@ -42,10 +42,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/user'
-
+                $ref: '#/components/schemas/userEntity'
+        400:
+          description: Ошибка валидации
+          content:
+            application/json:
+              schema:
+                '$ref': '#/components/schemas/validationError'
         409:
-          description: Пользователь с таким email уже существует.
+          description: Пользователь с такой почтой уже есть
+          content:
+            application/json:
+              schema:
+                '$ref': '#/components/schemas/conflictError'
 
   /users/login:
     post:
@@ -59,7 +68,7 @@ paths:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/login"
+              '$ref': '#/components/schemas/login'
         required: true
       responses:
         200:
@@ -67,44 +76,40 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/userWithToken"
+                '$ref': '#/components/schemas/loggedUserWithToken'
         400:
-          description: Ошибка тела запроса
+          description: Ошибка валидации
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/authPostError"
+                '$ref': '#/components/schemas/validationError'
+        401:
+          description: Not Authorized
+          content:
+            application/json:
+              schema:
+                '$ref': '#/components/schemas/loginError'
     get:
       tags:
         - users
       summary: Проверка состояния пользователя
       description: Возвращает информацию по авторизованному пользователю
       operationId: getLogin
-      parameters:
-      - name: X-Token
-        in: header
-        description: Авторизационный токен пользователя
-        required: true
-        schema:
-          type: string
-          example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
       responses:
         200:
           description: Статус авторизации пользователя
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/userWithToken"
+                '$ref': '#/components/schemas/loggedUser'
         401:
           description: Пользователь не авторизован
           content:
             application/json:
               schema:
-                oneOf:
-                - "$ref": "#/components/schemas/authError"
-                - "$ref": "#/components/schemas/tokenNotFound"
+                '$ref': '#/components/schemas/authError'
       security:
-      - bearerAuth: []
+        - bearerAuth: []
 
   /users/logout:
     delete:
@@ -113,19 +118,17 @@ paths:
       summary: Выход из закрытой части приложения
       description: Ресурс доступен только авторизованным клиентам
       operationId: deleteLogout
-      parameters:
-      - name: X-Token
-        in: header
-        description: Авторизационный токен пользователя
-        required: true
-        schema:
-          type: string
-          example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
       responses:
         204:
           description: Сеанс завершён
+        401:
+          description: Пользователь не авторизован
+          content:
+            application/json:
+              schema:
+                '$ref': '#/components/schemas/authError'
       security:
-      - bearerAuth: []
+        - bearerAuth: []
 
   /users/{userId}/avatar:
     post:
@@ -147,8 +150,15 @@ paths:
                   format: binary
         required: true
       responses:
-        200:
-          description: OK
+        201:
+          description: Файл загружен
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  avatarUrl:
+                    $ref: '#/components/schemas/avatarUrl'
         400:
           description: Ошибка загрузки
 
@@ -160,23 +170,23 @@ paths:
       description: По умолчанию сервис возвращает не больше 60 предложений по аренде
       operationId: getOffers
       parameters:
-      - in: query
-        name: count
-        description: Количество предложений на странице
-        required: false
-        schema:
-          type: integer
-          default: 60
-          minimum: 1
-          maximum: 100
-      - in: query
-        name: offset
-        description: Смещение для постраничного вывода
-        required: false
-        schema:
-          type: integer
-          default: 0
-          minimum: 0
+        - in: query
+          name: count
+          description: Количество предложений на странице
+          required: false
+          schema:
+            type: integer
+            default: 60
+            minimum: 1
+            maximum: 100
+        - in: query
+          name: offset
+          description: Смещение для постраничного вывода
+          required: false
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
       responses:
         200:
           description: Возвращает список предложений.
@@ -198,7 +208,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/offerFull'
+              $ref: '#/components/schemas/createOffer'
         required: true
 
       responses:
@@ -208,18 +218,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/offerFull'
+        400:
+          description: Ошибка валидации данных.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/validationError'
         401:
           description: Пользователь не авторизован.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/authError'
-        403:
-          description: Ошибка валидации данных.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/offerPostError'
 
   /offers/{offerId}:
     get:
@@ -236,21 +246,26 @@ paths:
           description: Уникальный идентификатор предложения
           required: true
           schema:
-            type: string
-            example: 66fe3e2dca1995a581c65b26
+            $ref: '#/components/schemas/offerId'
       responses:
         200:
           description: Предложение
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/offerFull"
-        403:
-          description: Ошибка валидации данных.
+                $ref: '#/components/schemas/offerFull'
+        401:
+          description: Пользователь не авторизован
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/offerPostError'
+                '$ref': '#/components/schemas/authError'
+        403:
+          description: Ошибка доступа.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/accessError'
         404:
           description: Предложение не найдено
           content:
@@ -271,14 +286,13 @@ paths:
           description: Уникальный идентификатор предложения
           required: true
           schema:
-            type: string
-            example: 66fe3e2dca1995a581c65b26
+            $ref: '#/components/schemas/offerId'
       requestBody:
         description: Объект, содержащий предложение по аренде.
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/offerFull"
+              '$ref': '#/components/schemas/offerFull'
         required: true
       responses:
         200:
@@ -286,7 +300,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/offerFull"
+                $ref: '#/components/schemas/offerFull'
+        401:
+          description: Пользователь не авторизован
+          content:
+            application/json:
+              schema:
+                '$ref': '#/components/schemas/authError'
+        403:
+          description: Ошибка доступа.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/accessError'
         404:
           description: Предложение не найдено
           content:
@@ -310,8 +336,7 @@ paths:
           description: Уникальный идентификатор предложения
           required: true
           schema:
-            type: string
-            example: 66fe3e2dca1995a581c65b26
+            $ref: '#/components/schemas/offerId'
 
       responses:
         204:
@@ -324,6 +349,18 @@ paths:
                   message:
                     type: string
                     example: Предложение удалено
+        401:
+          description: Пользователь не авторизован
+          content:
+            application/json:
+              schema:
+                '$ref': '#/components/schemas/authError'
+        403:
+          description: Ошибка доступа.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/accessError'
         404:
           description: Предложение не найдено
           content:
@@ -331,7 +368,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/notFoundError'
 
-  /premium:
+  /offers/premium:
     get:
       tags:
         - offers
@@ -340,19 +377,19 @@ paths:
         Сервис возвращает не больше 3 предложений с флагом «Premium».
       operationId: getPremium
       parameters:
-      - in: query
-        name: cityName
-        description: Город
-        required: true
-        schema:
-          type: string
-          enum:
-            - Paris
-            - Cologne
-            - Brussels
-            - Amsterdam
-            - Hamburg
-            - Dusseldorf
+        - in: query
+          name: city
+          description: Город
+          required: true
+          schema:
+            type: string
+            enum:
+              - Paris
+              - Cologne
+              - Brussels
+              - Amsterdam
+              - Hamburg
+              - Dusseldorf
       responses:
         200:
           description: Возвращает список предложений.
@@ -361,12 +398,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/offers'
 
-  /favorites:
+  /offers/favorites:
     get:
       tags:
         - offers
       summary: Список избранных предложений
-      description: Сервис возвращает все предложения, добавленные в избранное.
+      description: Сервис возвращает все предложения, добавленные в избранное пользователем.
       operationId: getFavorites
       security:
         - bearerAuth: []
@@ -377,8 +414,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/offers'
+        401:
+          description: Пользователь не авторизован
+          content:
+            application/json:
+              schema:
+                '$ref': '#/components/schemas/authError'
 
-  /favorite/{offerId}:
+  /offers/{offerId}/favorite:
     post:
       tags:
         - offers
@@ -392,21 +435,20 @@ paths:
           description: Уникальный идентификатор предложения
           required: true
           schema:
-            type: string
-            example: 66fe3e2dca1995a581c65b26
+            $ref: '#/components/schemas/offerId'
       responses:
         200:
           description: Предложение успешно добавлено в избранное.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/offerFull"
-        409:
-          description: Предложение уже в избранном
+                $ref: '#/components/schemas/offer'
+        401:
+          description: Пользователь не авторизован
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/validationFavorite'
+                '$ref': '#/components/schemas/authError'
         404:
           description: Предложение не найдено
           content:
@@ -420,24 +462,26 @@ paths:
       operationId: deleteFavorite
       security:
         - bearer: []
-
       parameters:
         - name: offerId
           in: path
           description: Уникальный идентификатор предложения
           required: true
           schema:
-            type: string
-            example: 66fe3e2dca1995a581c65b26
+            $ref: '#/components/schemas/offerId'
       responses:
-        204:
-          description: Предложение успешно удалено.
-        409:
-          description: Предложение не было в избранном.
+        200:
+          description: Предложение успешно добавлено в избранное.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/validationFavorite'
+                $ref: '#/components/schemas/offer'
+        401:
+          description: Пользователь не авторизован
+          content:
+            application/json:
+              schema:
+                '$ref': '#/components/schemas/authError'
         404:
           description: Предложение не найдено
           content:
@@ -445,19 +489,19 @@ paths:
               schema:
                 $ref: '#/components/schemas/notFoundError'
 
-  /offers/{offerId}/comments:
+  /comments/offer/{offerId}:
     get:
       tags:
         - comments
       summary: Список комментариев для предложения
-      description:  Сервис всегда возвращает список из 50 (или меньше) последних комментариев
+      description: Сервис всегда возвращает список из 50 (или меньше) последних комментариев
         Комментарии отсортированы по дате публикации (по убыванию). Сначала новые, потом старые.
       parameters:
         - in: path
           name: offerId
           required: true
           schema:
-            $ref: "#/components/schemas/offerId"
+            $ref: '#/components/schemas/offerId'
       responses:
         200:
           description: Возвращает комментарии для предложения.
@@ -470,7 +514,7 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/notFoundError"
+                '$ref': '#/components/schemas/notFoundError'
     post:
       tags:
         - comments
@@ -482,10 +526,26 @@ paths:
           name: offerId
           required: true
           schema:
-            $ref: "#/components/schemas/offerId"
+            $ref: '#/components/schemas/offerId'
       responses:
-        200:
-          description: OK
+        201:
+          description: Сомментарий создан.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/comment'
+        400:
+          description: Ошибка валидации
+          content:
+            application/json:
+              schema:
+                '$ref': '#/components/schemas/validationError'
+        401:
+          description: Не авторизован пользователь
+          content:
+            application/json:
+              schema:
+                '$ref': '#/components/schemas/authError'
 
 components:
   schemas:
@@ -501,13 +561,16 @@ components:
       example: password1
 
     offerId:
-      description: Уникальный идентификатор предложения
       type: string
       example: 66fe3e2dca1995a581c65b26
 
     image:
       type: string
       example: image-1.jpg
+
+    avatarUrl:
+      type: string
+      example: 'default-avatar.png'
 
     rating:
       type: number
@@ -526,6 +589,11 @@ components:
           type: number
           example: 2.351499
 
+    id:
+      type: string
+      description: Идентификатор
+      example: 66fe2e132616e2705f3e26eb
+
     city:
       type: object
       properties:
@@ -533,9 +601,9 @@ components:
           type: string
           example: Paris
         location:
-          $ref: "#/components/schemas/location"
+          $ref: '#/components/schemas/location'
 
-    userEntity:
+    user:
       type: object
       properties:
         name:
@@ -544,42 +612,51 @@ components:
           maxLength: 15
           example: 'Oliver'
         email:
-          $ref: "#/components/schemas/email"
-        avatarUrl:
-          type: string
-          example: '/oliver.jpg'
+          $ref: '#/components/schemas/email'
         type:
           type: string
           enum:
-            - Regular
-            - Pro
-          default: Regular
+            - regular
+            - pro
+          default: regular
+
+    userEntity:
+      allOf:
+        - type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/id'
+            avatarUrl:
+              $ref: '#/components/schemas/avatarUrl'
+        - $ref: '#/components/schemas/user'
 
     createUser:
       allOf:
-        - $ref: '#/components/schemas/userEntity'
+        - $ref: '#/components/schemas/user'
         - type: object
           properties:
             password:
               $ref: '#/components/schemas/password'
 
-    user:
-      allOf:
-        - type: object
-          properties:
-            id:
-              type: string
-              example: 66fe2e132616e2705f3e26eb
-        - $ref: '#/components/schemas/userEntity'
+    loggedUser:
+      type: object
+      properties:
+        name:
+          type: string
+          example: 'Oliver'
+        email:
+          $ref: '#/components/schemas/email'
+        avatarUrl:
+          $ref: '#/components/schemas/avatarUrl'
 
-    userWithToken:
+    loggedUserWithToken:
       allOf:
-        - $ref: '#/components/schemas/user'
+        - $ref: '#/components/schemas/loggedUser'
         - type: object
           properties:
             token:
               type: string
-              example: "T2xpdmVyLmNvbm5lckBnbWFpbC5jb20="
+              example: 'T2xpdmVyLmNvbm5lckBnbWFpbC5jb20='
 
     login:
       type: object
@@ -589,7 +666,7 @@ components:
         password:
           $ref: '#/components/schemas/password'
 
-    offer:
+    createOffer:
       type: object
       properties:
         title:
@@ -601,6 +678,45 @@ components:
           type: string
           minLength: 20
           maxLength: 1024
+          example: Private house with a garden and swimming pool.
+        city:
+          $ref: '#/components/schemas/city'
+        previewImage:
+          $ref: '#/components/schemas/image'
+        images:
+          type: array
+          maxItems: 6
+          items:
+            $ref: '#/components/schemas/image'
+        isPremium:
+          type: boolean
+        type:
+          type: string
+          description: Тип жилья
+          enum: [apartment, house, room, hotel]
+        price:
+          type: number
+          minLength: 100
+          maxLength: 100000
+          example: 90000
+        goods:
+          type: array
+          description: Удобства, доступные в жилье
+          items:
+            type: string
+            enum: [Breakfast, Air conditioning, Laptop friendly workspace, Baby seat, Washer, Towels, Fridge]
+            example: Breakfast, Air conditioning, Laptop friendly workspace
+        location:
+          $ref: '#/components/schemas/location'
+
+    offer:
+      type: object
+      properties:
+        title:
+          type: string
+          example: Private Garden Villa
+        description:
+          type: string
           example: Private house with a garden and swimming pool.
         postDate:
           type: string
@@ -615,7 +731,7 @@ components:
         isFavorite:
           type: boolean
         rating:
-          $ref: "#/components/schemas/rating"
+          $ref: '#/components/schemas/rating'
         type:
           type: string
           description: Тип жилья
@@ -649,7 +765,7 @@ components:
 
     offerFull:
       allOf:
-        - $ref: "#/components/schemas/offer"
+        - $ref: '#/components/schemas/offer'
         - type: object
           properties:
             images:
@@ -683,24 +799,26 @@ components:
     offers:
       type: array
       items:
-        $ref: "#/components/schemas/offer"
+        $ref: '#/components/schemas/offer'
 
     comment:
       type: object
       properties:
+        id:
+          $ref: '#/components/schemas/id'
         comment:
           type: string
           description: Текст комментария
           minLength: 5
           maxLength: 1024
-        date:
+        rating:
+          $ref: '#/components/schemas/rating'
+        postDate:
           type: string
           format: date
           description: Дата публикации комментария
-        rating:
-          $ref: "#/components/schemas/rating"
         user:
-          $ref: '#/components/schemas/user'
+          $ref: '#/components/schemas/userEntity'
 
     comments:
       type: array
@@ -713,64 +831,77 @@ components:
         errorType:
           type: string
           example: COMMON_ERROR
-        message:
+        error:
           type: string
+          example: 'some error'
+        details:
+          type: array
+          items:
+            type: string
+          example: []
 
     validationError:
       type: object
-      properties:
-        errorType:
-          type: string
-          example: VALIDATION_ERROR
-        message:
-          type: string
-          example: ошибка валидации
-        details:
-          type: string
-          example: ошибка валидации
-    authError:
       allOf:
         - $ref: '#/components/schemas/commonError'
         - type: object
           properties:
-            message:
-              example: Пользователь не авторизован.
-    authPostError:
-      allOf:
-        - $ref: '#/components/schemas/validationError'
-        - type: object
-          properties:
-            message:
-              example: Длинна пароля должна быть от 6 до 12 символов.
-    offerPostError:
-      allOf:
-        - $ref: '#/components/schemas/validationError'
-        - type: object
-          properties:
-            message:
-              example: Название предложения должно быть в диапазоне 10-100 символов.
-    tokenNotFound:
+            errorType:
+              type: string
+              example: VALIDATION_ERROR
+            error:
+              type: string
+              example: 'Validation error: check DTO'
+
+    conflictError:
+      type: object
       allOf:
         - $ref: '#/components/schemas/commonError'
         - type: object
           properties:
-            message:
-              example: Токен не найден.
-    validationFavorite:
-      allOf:
-        - $ref: '#/components/schemas/validationError'
-        - type: object
-          properties:
-            message:
-              example: Конфликт статуса "избранное".
+            error:
+              type: string
+              example: 'Already exists'
 
     notFoundError:
+      type: object
       allOf:
         - $ref: '#/components/schemas/commonError'
         - type: object
           properties:
-            message:
-              example: Предложение не найдено.
+            error:
+              type: string
+              example: 'Not found'
+
+    accessError:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/commonError'
+        - type: object
+          properties:
+            error:
+              type: string
+              example: 'Access deny'
+
+    authError:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/commonError'
+        - type: object
+          properties:
+            error:
+              type: string
+              example: 'Unauthorized'
+
+    loginError:
+      type: object
+      properties:
+        type:
+          type: string
+          example: 'AUTHORIZATION'
+        error:
+          type: string
+          example: 'Incorrect user name or password'
 
   securitySchemes:
     bearerAuth:
