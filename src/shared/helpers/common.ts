@@ -16,10 +16,17 @@ export function getRandomInRange(range: Range, numAfterDigit = 0) {
   return generateRandomValue(range.Min, range.Max, numAfterDigit);
 }
 
-export function getRandomItems<T>(items: T[]): T[] {
-  const startPosition = generateRandomValue(0, items.length - 1);
-  const endPosition = startPosition + generateRandomValue(startPosition, items.length);
-  return items.slice(startPosition, endPosition);
+export function applyRandomOffset(value: number, range: Range, numAfterDigit = 6) {
+  return value + getRandomInRange(range, numAfterDigit);
+}
+
+export function getRandomItems<T>(items: T[], numItems: number): T[] {
+  if (numItems > items.length) {
+    throw new Error('Запрашиваемое количество элементов больше, чем длина массива.');
+  }
+
+  const shuffledArray = items.sort(() => 0.5 - Math.random());
+  return shuffledArray.slice(0, numItems);
 }
 
 export function getRandomItem<T>(items: T[]): T {

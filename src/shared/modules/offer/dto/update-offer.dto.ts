@@ -3,7 +3,7 @@ import {
   ArrayMaxSize,
   ArrayMinSize,
   IsArray,
-  IsBooleanString,
+  IsBoolean,
   IsEnum,
   IsNumber,
   IsObject,
@@ -45,7 +45,7 @@ export class UpdateOfferDto {
   public images?: Image[];
 
   @IsOptional()
-  @IsBooleanString({ message: OfferValidation.isPremium.invalidFormat })
+  @IsBoolean({ message: OfferValidation.isPremium.invalidFormat })
   public isPremium?: boolean;
 
   @IsOptional()

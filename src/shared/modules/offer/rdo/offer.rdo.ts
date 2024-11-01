@@ -1,5 +1,6 @@
-import { City, OfferType } from '#types/index.js';
-import { Expose } from 'class-transformer';
+import { City, Location, OfferType, Goods } from '#types/index.js';
+import { Expose, Type } from 'class-transformer';
+import { UserRdo } from '#shared/modules/user/rdo/user.rdo.js';
 
 export class OfferRdo {
   @Expose()
@@ -30,8 +31,30 @@ export class OfferRdo {
   public type: OfferType;
 
   @Expose()
+  public location: Location;
+
+  @Expose()
   public price: number;
 
   @Expose()
   public commentsCount: number;
+
+  @Expose()
+  public description: string;
+
+  @Expose()
+  public images: string[];
+
+  @Expose()
+  public bedrooms: number;
+
+  @Expose()
+  public maxAdults: number;
+
+  @Expose()
+  public goods: Goods[];
+
+  @Expose({ name: 'userId' })
+  @Type(() => UserRdo)
+  public host: UserRdo;
 }

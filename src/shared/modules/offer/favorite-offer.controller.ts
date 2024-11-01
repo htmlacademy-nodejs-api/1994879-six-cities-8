@@ -30,13 +30,13 @@ export class FavoriteOfferController extends BaseController {
     ];
 
     this.addRoute({
-      path: OfferRoute.Favorites,
+      path: OfferRoute.Favorite,
       method: HttpMethod.Get,
       handler: this.getFavorites,
       middlewares: [new PrivateRouteMiddleware()],
     });
-    this.addRoute({ path: OfferRoute.Favorite, method: HttpMethod.Post, handler: this.addFavorite, middlewares });
-    this.addRoute({ path: OfferRoute.Favorite, method: HttpMethod.Delete, handler: this.deleteFavorite, middlewares });
+    this.addRoute({ path: OfferRoute.OfferFavorite, method: HttpMethod.Post, handler: this.addFavorite, middlewares });
+    this.addRoute({ path: OfferRoute.OfferFavorite, method: HttpMethod.Delete, handler: this.deleteFavorite, middlewares });
   }
 
   public async getFavorites({ tokenPayload }: Request, res: Response): Promise<void> {
