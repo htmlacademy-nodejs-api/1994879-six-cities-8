@@ -17,7 +17,6 @@ import { UserRdo } from './rdo/user.rdo.js';
 import { UnauthorizedError, UserAlreadyExistsError } from './errors.js';
 import { UserRoute } from './const.js';
 import { CreateUserDto } from './dto/create-user.dto.js';
-import { LoginUserDto } from './dto/login-user.dto.js';
 import { AuthService } from '#shared/modules/auth/auth-service.interface.js';
 import { LoggedUserRdo } from './rdo/logged-user.rdo.js';
 import { UploadUserAvatarRdo } from './rdo/upload-user-avatar.rdo.js';
@@ -42,12 +41,11 @@ export class UserController extends BaseController {
       path: UserRoute.Login,
       method: HttpMethod.Post,
       handler: this.login,
-      middlewares: [new ValidateDtoMiddleware(LoginUserDto)],
     });
     this.addRoute({ path: UserRoute.Login, method: HttpMethod.Get, handler: this.checkAuthenticate });
     this.addRoute({
       path: UserRoute.Logout,
-      method: HttpMethod.Get,
+      method: HttpMethod.Delete,
       handler: this.logout,
       middlewares: [new PrivateRouteMiddleware()],
     });
@@ -81,8 +79,8 @@ export class UserController extends BaseController {
     this.ok(res, Object.assign(responseData, { token }));
   }
 
-  public async checkAuthenticate({ tokenPayload: { email } }: Request, res: Response): Promise<void> {
-    const user = await this.userService.findByEmail(email);
+  public async checkAuthenticate({ tokenPayload }: Request, res: Response): Promise<void> {
+    const user = await this.userService.findByEmail(tokenPayload?.email);
     if (!user) {
       throw new UnauthorizedError();
     }

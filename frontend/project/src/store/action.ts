@@ -4,6 +4,8 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import type { UserAuth, User, Offer, Comment, CommentAuth, FavoriteAuth, UserRegister, NewOffer } from '../types/types';
 import { ApiRoute, AppRoute, HttpCode } from '../const';
 import { Token } from '../utils';
+import { adaptCommentToClient } from '../dto/adaptersToClient';
+import { CommentDto } from '../dto/comment/comment.dto';
 
 type Extra = {
   api: AxiosInstance;
@@ -35,16 +37,18 @@ export const fetchOffers = createAsyncThunk<Offer[], undefined, { extra: Extra }
     const { data } = await api.get<Offer[]>(ApiRoute.Offers);
 
     return data;
-  });
+  }
+);
 
 export const fetchFavoriteOffers = createAsyncThunk<Offer[], undefined, { extra: Extra }>(
   Action.FETCH_FAVORITE_OFFERS,
   async (_, { extra }) => {
     const { api } = extra;
-    const { data } = await api.get<Offer[]>(ApiRoute.Favorite);
+    const { data } = await api.get<Offer[]>(`${ApiRoute.Offers}${ApiRoute.Favorite}`);
 
     return data;
-  });
+  }
+);
 
 export const fetchOffer = createAsyncThunk<Offer, Offer['id'], { extra: Extra }>(
   Action.FETCH_OFFER,
@@ -64,7 +68,8 @@ export const fetchOffer = createAsyncThunk<Offer, Offer['id'], { extra: Extra }>
 
       return Promise.reject(error);
     }
-  });
+  }
+);
 
 export const postOffer = createAsyncThunk<Offer, NewOffer, { extra: Extra }>(
   Action.POST_OFFER,
@@ -74,7 +79,8 @@ export const postOffer = createAsyncThunk<Offer, NewOffer, { extra: Extra }>(
     history.push(`${AppRoute.Property}/${data.id}`);
 
     return data;
-  });
+  }
+);
 
 export const editOffer = createAsyncThunk<Offer, Offer, { extra: Extra }>(
   Action.EDIT_OFFER,
@@ -84,7 +90,8 @@ export const editOffer = createAsyncThunk<Offer, Offer, { extra: Extra }>(
     history.push(`${AppRoute.Property}/${data.id}`);
 
     return data;
-  });
+  }
+);
 
 export const deleteOffer = createAsyncThunk<void, string, { extra: Extra }>(
   Action.DELETE_OFFER,
@@ -92,7 +99,8 @@ export const deleteOffer = createAsyncThunk<void, string, { extra: Extra }>(
     const { api, history } = extra;
     await api.delete(`${ApiRoute.Offers}/${id}`);
     history.push(AppRoute.Root);
-  });
+  }
+);
 
 export const fetchPremiumOffers = createAsyncThunk<Offer[], string, { extra: Extra }>(
   Action.FETCH_PREMIUM_OFFERS,
@@ -101,16 +109,18 @@ export const fetchPremiumOffers = createAsyncThunk<Offer[], string, { extra: Ext
     const { data } = await api.get<Offer[]>(`${ApiRoute.Premium}?city=${cityName}`);
 
     return data;
-  });
+  }
+);
 
 export const fetchComments = createAsyncThunk<Comment[], Offer['id'], { extra: Extra }>(
   Action.FETCH_COMMENTS,
   async (id, { extra }) => {
     const { api } = extra;
-    const { data } = await api.get<Comment[]>(`${ApiRoute.Offers}/${id}${ApiRoute.Comments}`);
+    const { data } = await api.get<CommentDto[]>(`${ApiRoute.Comments}/${id}`);
 
-    return data;
-  });
+    return data.map(adaptCommentToClient);
+  }
+);
 
 export const fetchUserStatus = createAsyncThunk<UserAuth['email'], undefined, { extra: Extra }>(
   Action.FETCH_USER_STATUS,
@@ -118,7 +128,11 @@ export const fetchUserStatus = createAsyncThunk<UserAuth['email'], undefined, { 
     const { api } = extra;
 
     try {
-      const { data } = await api.get<User>(ApiRoute.Login);
+      const { data, status } = await api.get<User>(ApiRoute.Login);
+
+      if (status === HttpCode.NoAuth) {
+        Token.drop();
+      }
 
       return data.email;
     } catch (error) {
@@ -130,7 +144,8 @@ export const fetchUserStatus = createAsyncThunk<UserAuth['email'], undefined, { 
 
       return Promise.reject(error);
     }
-  });
+  }
+);
 
 export const loginUser = createAsyncThunk<UserAuth['email'], UserAuth, { extra: Extra }>(
   Action.LOGIN_USER,
@@ -143,7 +158,8 @@ export const loginUser = createAsyncThunk<UserAuth['email'], UserAuth, { extra: 
     history.push(AppRoute.Root);
 
     return email;
-  });
+  }
+);
 
 export const logoutUser = createAsyncThunk<void, undefined, { extra: Extra }>(
   Action.LOGOUT_USER,
@@ -152,82 +168,84 @@ export const logoutUser = createAsyncThunk<void, undefined, { extra: Extra }>(
     await api.delete(ApiRoute.Logout);
 
     Token.drop();
-  });
+  }
+);
 
 export const registerUser = createAsyncThunk<void, UserRegister, { extra: Extra }>(
   Action.REGISTER_USER,
   async ({ email, password, name, avatar, type }, { extra }) => {
     const { api, history } = extra;
-    const { data } = await api.post<{ id: string }>(ApiRoute.Register, {
+    const { data, status } = await api.post<{ id: string }>(ApiRoute.Register, {
       email,
       password,
       name,
       type,
     });
-    if (avatar) {
+    if (avatar && avatar.size && status === HttpCode.Created) {
+      const {
+        data: { token },
+      } = await api.post<User & { token: string }>(ApiRoute.Login, { email, password });
+
+      Token.save(token);
+
       const payload = new FormData();
       payload.append('avatar', avatar);
-      await api.post(`/${data.id}${ApiRoute.Avatar}`, payload, {
+      await api.post(`${ApiRoute.User}/${data.id}${ApiRoute.Avatar}`, payload, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
     }
     history.push(AppRoute.Login);
-  });
-
+  }
+);
 
 export const postComment = createAsyncThunk<Comment, CommentAuth, { extra: Extra }>(
   Action.POST_COMMENT,
   async ({ id, comment, rating }, { extra }) => {
     const { api } = extra;
-    const { data } = await api.post<Comment>(`${ApiRoute.Offers}/${id}${ApiRoute.Comments}`, { comment, rating });
+    const { data } = await api.post<CommentDto>(`${ApiRoute.Comments}/${id}`, { comment, rating });
 
-    return data;
-  });
-
-export const postFavorite = createAsyncThunk<
-  Offer,
-  FavoriteAuth,
-  { extra: Extra }
->(Action.POST_FAVORITE, async (id, { extra }) => {
-  const { api, history } = extra;
-
-  try {
-    const { data } = await api.post<Offer>(
-      `${ApiRoute.Favorite}/${id}`
-    );
-
-    return data;
-  } catch (error) {
-    const axiosError = error as AxiosError;
-
-    if (axiosError.response?.status === HttpCode.NoAuth) {
-      history.push(AppRoute.Login);
-    }
-
-    return Promise.reject(error);
+    return adaptCommentToClient(data);
   }
-});
+);
 
-export const deleteFavorite = createAsyncThunk<
-  Offer,
-  FavoriteAuth,
-  { extra: Extra }
->(Action.DELETE_FAVORITE, async (id, { extra }) => {
-  const { api, history } = extra;
+export const postFavorite = createAsyncThunk<Offer, FavoriteAuth, { extra: Extra }>(
+  Action.POST_FAVORITE,
+  async (id, { extra }) => {
+    const { api, history } = extra;
 
-  try {
-    const { data } = await api.delete<Offer>(
-      `${ApiRoute.Favorite}/${id}`
-    );
+    try {
+      const { data } = await api.post<Offer>(`${ApiRoute.Offers}/${id}${ApiRoute.Favorite}`);
 
-    return data;
-  } catch (error) {
-    const axiosError = error as AxiosError;
+      return data;
+    } catch (error) {
+      const axiosError = error as AxiosError;
 
-    if (axiosError.response?.status === HttpCode.NoAuth) {
-      history.push(AppRoute.Login);
+      if (axiosError.response?.status === HttpCode.NoAuth) {
+        history.push(AppRoute.Login);
+      }
+
+      return Promise.reject(error);
     }
-
-    return Promise.reject(error);
   }
-});
+);
+
+export const deleteFavorite = createAsyncThunk<Offer, FavoriteAuth, { extra: Extra }>(
+  Action.DELETE_FAVORITE,
+  async (id, { extra }) => {
+    const { api, history } = extra;
+
+    try {
+      const { data } = await api.delete<Offer>(`${ApiRoute.Offers}/${id}${ApiRoute.Favorite}`);
+
+      return data;
+    } catch (error) {
+      const axiosError = error as AxiosError;
+
+      if (axiosError.response?.status === HttpCode.NoAuth) {
+        history.push(AppRoute.Login);
+      }
+
+      return Promise.reject(error);
+    }
+  }
+);

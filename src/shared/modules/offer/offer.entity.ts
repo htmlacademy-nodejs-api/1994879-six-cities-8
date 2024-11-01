@@ -2,7 +2,7 @@ import { defaultClasses, getModelForClass, modelOptions, prop, Ref } from '@type
 import { UserEntity } from '#shared/modules/user/index.js';
 import { Goods, OfferType, Location, City } from '#types/index.js';
 import { Schema } from 'mongoose';
-import { AdultLimit, RatingLimit, RoomLimit } from './const.js';
+import { AdultLimit, RoomLimit } from './const.js';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export interface OfferEntity extends defaultClasses.Base {}
@@ -38,10 +38,10 @@ export class OfferEntity extends defaultClasses.TimeStamps {
 
   isFavorite?: boolean;
 
-  @prop({ required: true, default: RatingLimit.Min })
+  @prop()
   public rating: number;
 
-  @prop({ required: true, default: 0 })
+  @prop()
   public commentsCount: number;
 
   @prop({ type: () => String, enum: OfferType, required: true })

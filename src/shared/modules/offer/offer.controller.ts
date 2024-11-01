@@ -15,7 +15,6 @@ import { OfferRoute } from './const.js';
 import { CommentService } from '../comment/index.js';
 import { fillDto } from '#shared/helpers/common.js';
 import { OfferRdo } from './rdo/offer.rdo.js';
-import { OfferFullRdo } from './rdo/offer-full.rdo.js';
 import { NotFoundOfferError } from './offer.error.js';
 import { CreateOfferDto } from './dto/create-offer.dto.js';
 import { OfferRequest } from './types/offer-request.type.js';
@@ -63,21 +62,21 @@ export class OfferController extends BaseController {
 
   public async getAll({ query, tokenPayload }: Request, res: Response): Promise<void> {
     const offers = await this.offerService.find(Number(query.count), Number(query.offset), tokenPayload?.id);
-    this.ok(res, fillDto(OfferFullRdo, offers));
+    this.ok(res, fillDto(OfferRdo, offers));
   }
 
   public async getOffer({ params: { offerId }, tokenPayload }: OfferRequest, res: Response): Promise<void> {
-    const offer = await this.offerService.findById(offerId, tokenPayload.id);
+    const offer = await this.offerService.findById(offerId, tokenPayload?.id);
     if (!offer) {
       throw new NotFoundOfferError();
     }
-    this.ok(res, fillDto(OfferFullRdo, offer));
+    this.ok(res, fillDto(OfferRdo, offer));
   }
 
   public async createOffer({ body, tokenPayload: { id: userId } }: CreateOfferRequest, res: Response): Promise<void> {
     const newOffer = await this.offerService.create({ ...body, userId });
     const offer = await this.offerService.findById(newOffer.id, userId);
-    this.created(res, fillDto(OfferFullRdo, offer));
+    this.created(res, fillDto(OfferRdo, offer));
   }
 
   private async checkAccess(offerId: string, userId: string): Promise<void> {
@@ -95,7 +94,7 @@ export class OfferController extends BaseController {
     await this.checkAccess(offerId, tokenPayload.id);
 
     const updatedOffer = await this.offerService.updateById(offerId, body);
-    this.ok(res, fillDto(OfferFullRdo, updatedOffer));
+    this.ok(res, fillDto(OfferRdo, updatedOffer));
   }
 
   public async deleteOffer({ params: { offerId }, tokenPayload }: OfferRequest, res: Response): Promise<void> {

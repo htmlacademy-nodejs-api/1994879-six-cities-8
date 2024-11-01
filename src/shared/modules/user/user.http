@@ -28,8 +28,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjY3MWZkOGJmMDY0MDY0YWQ2YjQ1Y
 
 ### Выход из закрытой части приложения
 
-GET http://localhost:5000/users/logout HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjY3MWZkOGJmMDY0MDY0YWQ2YjQ1YzkzYiIsImVtYWlsIjoia2Vrc0BodG1sYWNhZGVteS5ydSIsIm5hbWUiOiJrZWtzIiwiaWF0IjoxNzMwMTk2NjQ3LCJleHAiOjE3MzAzNjk0NDd9.Xwq6Tekerlp0qBIxfEjtENhC5zlLf7AnhvLgM8eT00w
+DELETE http://localhost:5000/users/logout HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjY3MjM4ZGYxNmQ4YmZkYmUxNTM3MWVlMyIsImVtYWlsIjoiYm9iQGh0bWxhY2FkZW15LmNvbSIsIm5hbWUiOiJib2IiLCJpYXQiOjE3MzAzODMzNjIsImV4cCI6MTczMDU1NjE2Mn0.bCelxVTDxGHolOpJniYP1KlYqffrN4CscsNiz7Nk1qw
 
 ### Отправить изображение
 

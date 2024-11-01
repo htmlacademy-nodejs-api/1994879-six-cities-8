@@ -44,7 +44,7 @@ export class TSVFileReader extends EventEmitter implements FileReader {
       isPremium: this.parseBoolean(isPremium),
       isFavorite: this.parseBoolean(isFavorite),
       rating: Number(rating),
-      type: OfferType[offerType as OfferType],
+      type: offerType as OfferType,
       bedrooms: Number(bedrooms),
       maxAdults: Number(maxAdults),
       price: this.parsePrice(price),
@@ -68,14 +68,7 @@ export class TSVFileReader extends EventEmitter implements FileReader {
   }
 
   private parseGoods(goods: string): Goods[] {
-    return goods.split(',').map((name) => {
-      const goodsEnumValue = Goods[name.trim() as Goods];
-      if (goodsEnumValue) {
-        return goodsEnumValue;
-      } else {
-        throw new Error(`Invalid goods: ${name}`);
-      }
-    });
+    return goods.split(',') as Goods[];
   }
 
   private parsePrice(price: string): number {

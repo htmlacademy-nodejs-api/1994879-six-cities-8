@@ -1,4 +1,7 @@
 import { CityName, Location } from '#types/index.js';
+import { Range } from '#types/range.interface.js';
+
+export const LocationOffset: Range = { Min: -0.005, Max: +0.005 };
 
 export const CitiesLocation: Record<CityName, Location> = {
   Paris: { latitude: 48.85661, longitude: 2.351499 },

@@ -3,7 +3,7 @@ import {
   ArrayMaxSize,
   ArrayMinSize,
   IsArray,
-  IsBooleanString,
+  IsBoolean,
   IsEnum,
   IsNumber,
   IsObject,
@@ -38,7 +38,7 @@ export class CreateOfferDto {
   @Matches(/(?:\.png|\.jpg)$/, { each: true, message: OfferValidation.images.invalidFormat })
   public images: Image[];
 
-  @IsBooleanString({ message: OfferValidation.isPremium.invalidFormat })
+  @IsBoolean({ message: OfferValidation.isPremium.invalidFormat })
   public isPremium: boolean;
 
   @IsEnum(OfferType, { message: OfferValidation.type.invalid })

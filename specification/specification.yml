@@ -134,6 +134,8 @@ paths:
     post:
       tags:
         - users
+      security:
+        - bearerAuth: []
       summary: Загрузить изображение аватара
       description: Загружает изображение аватара пользователя. Изображение
         аватара должно быть в формате `png` или `jpg`.
@@ -217,7 +219,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/offerFull'
+                $ref: '#/components/schemas/offer'
         400:
           description: Ошибка валидации данных.
           content:
@@ -253,7 +255,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/offerFull'
+                $ref: '#/components/schemas/offer'
         401:
           description: Пользователь не авторизован
           content:
@@ -292,7 +294,7 @@ paths:
         content:
           application/json:
             schema:
-              '$ref': '#/components/schemas/offerFull'
+              '$ref': '#/components/schemas/offer'
         required: true
       responses:
         200:
@@ -300,7 +302,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/offerFull'
+                $ref: '#/components/schemas/offer'
         401:
           description: Пользователь не авторизован
           content:
@@ -747,6 +749,28 @@ components:
           type: number
           description: Количество комментариев
           example: 26
+        images:
+          type: array
+          maxItems: 6
+          items:
+            $ref: '#/components/schemas/image'
+        bedrooms:
+          type: integer
+          minLength: 1
+          maxLength: 8
+          example: 3
+        maxAdults:
+          type: integer
+          minLength: 1
+          maxLength: 10
+          example: 6
+        goods:
+          type: array
+          description: Удобства, доступные в жилье
+          items:
+            type: string
+            enum: [Breakfast, Air conditioning, Laptop friendly workspace, Baby seat, Washer, Towels, Fridge]
+            example: Breakfast, Air conditioning, Laptop friendly workspace
         location:
           $ref: '#/components/schemas/location'
       required:
@@ -755,46 +779,17 @@ components:
         - postDate
         - city
         - previewImage
+        - images
         - isPremium
         - isFavorite
         - rating
         - type
         - price
+        - goods
+        - bedrooms
+        - maxAdults
         - host
         - location
-
-    offerFull:
-      allOf:
-        - $ref: '#/components/schemas/offer'
-        - type: object
-          properties:
-            images:
-              type: array
-              maxItems: 6
-              items:
-                $ref: '#/components/schemas/image'
-            bedrooms:
-              type: integer
-              minLength: 1
-              maxLength: 8
-              example: 3
-            maxAdults:
-              type: integer
-              minLength: 1
-              maxLength: 10
-              example: 6
-            goods:
-              type: array
-              description: Удобства, доступные в жилье
-              items:
-                type: string
-                enum: [Breakfast, Air conditioning, Laptop friendly workspace, Baby seat, Washer, Towels, Fridge]
-                example: Breakfast, Air conditioning, Laptop friendly workspace
-          required:
-            - images
-            - goods
-            - bedrooms
-            - maxAdults
 
     offers:
       type: array
